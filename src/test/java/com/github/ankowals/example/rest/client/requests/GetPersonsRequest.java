@@ -26,10 +26,7 @@ public class GetPersonsRequest implements ExecutableRequest {
     }
 
     public PersonDto[] asDto() {
-        return given()
-                .spec(requestSpecBuilder.build())
-                .when()
-                .get("/persons")
+        return execute()
                 .as(PersonDto[].class, new Jackson2Mapper(((type, charset) -> JacksonMapperFactory.create())));
     }
 }

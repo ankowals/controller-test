@@ -9,27 +9,39 @@ import java.sql.SQLException;
 
 public class PostgresDb {
 
-    private final PostgreSQLContainer<?> container;
+    private final Connection connection;
 
-    private PostgresDb(PostgreSQLContainer<?> container) {
-        this.container = container;
-        container.start();
+    private PostgresDb(DockerImageName dockerImageName) throws SQLException {
+        this.connection = createConnection(startContainer(dockerImageName));
     }
 
     public static PostgresDb start() {
-        return new PostgresDb(createContainer(DockerImageName.parse("postgres:14.1")));
+        try {
+            return new PostgresDb(DockerImageName.parse("postgres:14.1"));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public Connection getConnection() throws SQLException {
+    public Connection getConnection()  {
+        return connection;
+    }
+
+    private Connection createConnection(PostgreSQLContainer<?> container) throws SQLException {
         return DriverManager.getConnection(container.getJdbcUrl(), container.getUsername(), container.getPassword());
     }
 
-    private static PostgreSQLContainer<?> createContainer(DockerImageName dockerImageName) {
-        return new PostgreSQLContainer<>(dockerImageName)
+    private PostgreSQLContainer<?> startContainer(DockerImageName dockerImageName) {
+        try(PostgreSQLContainer<?> container = new PostgreSQLContainer<>(dockerImageName)
                 .withDatabaseName("postgres")
                 .withUsername("postgres")
                 .withPassword("postgres")
                 .withExposedPorts(5432)
-                .withReuse(true);
+                .withReuse(true)) {
+
+            container.start();
+
+            return container;
+        }
     }
 }
