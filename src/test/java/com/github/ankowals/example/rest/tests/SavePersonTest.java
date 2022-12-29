@@ -20,7 +20,7 @@ import static com.github.ankowals.example.rest.data.PersonDtoFactory.customize;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @MicronautTest
-public class PersonServiceIntegrationTest extends IntegrationTestBase {
+public class SavePersonTest extends IntegrationTestBase {
 
     @Inject
     EmbeddedServer embeddedServer;
