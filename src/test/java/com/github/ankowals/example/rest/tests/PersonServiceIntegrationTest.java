@@ -1,31 +1,34 @@
 package com.github.ankowals.example.rest.tests;
 
+import com.github.ankowals.example.rest.base.IntegrationTestBase;
 import com.github.ankowals.example.rest.client.ApiClient;
 import com.github.ankowals.example.rest.client.ApiClientFactory;
 import com.github.ankowals.example.rest.data.PersonDtoFactory;
 import com.github.ankowals.example.rest.data.PersonDtoRandomizer;
+import com.github.ankowals.example.rest.domain.Person;
 import com.github.ankowals.example.rest.dto.PersonDto;
-import com.github.ankowals.example.rest.environment.StartsPostgres;
+import com.github.ankowals.example.rest.repositories.PersonRepository;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
+import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.sql.SQLException;
 
 import static com.github.ankowals.example.rest.data.PersonDtoFactory.customize;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @MicronautTest
-public class PersonServiceTest implements StartsPostgres {
+public class PersonServiceIntegrationTest extends IntegrationTestBase {
 
     @Inject
     EmbeddedServer embeddedServer;
 
-    ApiClient api;
+    @Inject
+    PersonRepository personRepository;
 
+    ApiClient api;
     PersonDtoFactory testData = new PersonDtoFactory(new PersonDtoRandomizer());
 
     @BeforeEach
@@ -41,6 +44,10 @@ public class PersonServiceTest implements StartsPostgres {
                 .execute()
                 .then()
                 .statusCode(HttpStatus.CREATED.getCode());
+
+        assertThat(personRepository.findAll())
+                .extracting(Person::getName, Person::getAge)
+                .contains(Tuple.tuple(personDto.getName(), personDto.getAge()));
     }
 
     @Test
@@ -54,7 +61,7 @@ public class PersonServiceTest implements StartsPostgres {
     }
 
     @Test
-    void shouldConnectToDb() throws SQLException {
+    void shouldConnectToDb() {
         assertThat(getPostgresConnection()).isNotNull();
     }
 }

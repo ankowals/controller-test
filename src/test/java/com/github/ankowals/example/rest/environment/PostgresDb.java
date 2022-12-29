@@ -10,9 +10,15 @@ import java.sql.SQLException;
 public class PostgresDb {
 
     private final Connection connection;
+    private final PostgreSQLContainer<?> container;
 
     private PostgresDb(DockerImageName dockerImageName) throws SQLException {
-        this.connection = createConnection(startContainer(dockerImageName));
+        this.container = createContainer(dockerImageName);
+        container.start();
+
+        this.connection = DriverManager.getConnection(container.getJdbcUrl(),
+                container.getUsername(),
+                container.getPassword());
     }
 
     public static PostgresDb start() {
@@ -27,19 +33,17 @@ public class PostgresDb {
         return connection;
     }
 
-    private Connection createConnection(PostgreSQLContainer<?> container) throws SQLException {
-        return DriverManager.getConnection(container.getJdbcUrl(), container.getUsername(), container.getPassword());
+    public PostgreSQLContainer<?> getContainer() {
+        return container;
     }
 
-    private PostgreSQLContainer<?> startContainer(DockerImageName dockerImageName) {
+    private PostgreSQLContainer<?> createContainer(DockerImageName dockerImageName) {
         try(PostgreSQLContainer<?> container = new PostgreSQLContainer<>(dockerImageName)
                 .withDatabaseName("postgres")
                 .withUsername("postgres")
                 .withPassword("postgres")
                 .withExposedPorts(5432)
                 .withReuse(true)) {
-
-            container.start();
 
             return container;
         }
