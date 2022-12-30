@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class IntegrationTestBase implements StartsPostgres, TestPropertyProvider {
+public class TestBase implements StartsPostgres, TestPropertyProvider {
 
     @NonNull
     @Override

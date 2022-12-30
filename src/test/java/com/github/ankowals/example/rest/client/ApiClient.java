@@ -1,5 +1,6 @@
 package com.github.ankowals.example.rest.client;
 
+import com.github.ankowals.example.rest.client.requests.GetPersonRequest;
 import com.github.ankowals.example.rest.client.requests.GetPersonsRequest;
 import com.github.ankowals.example.rest.client.requests.SavePersonRequest;
 import com.github.ankowals.example.rest.dto.PersonDto;
@@ -22,5 +23,7 @@ public class ApiClient {
     public GetPersonsRequest getPersons() {
         return new GetPersonsRequest(requestSpecBuilderSupplier.get());
     }
-
+    public GetPersonRequest getPerson(Long id) {
+        return new GetPersonRequest(requestSpecBuilderSupplier.get(), id);
+    }
 }

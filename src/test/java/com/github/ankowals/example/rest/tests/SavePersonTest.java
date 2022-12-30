@@ -1,26 +1,27 @@
 package com.github.ankowals.example.rest.tests;
 
-import com.github.ankowals.example.rest.base.IntegrationTestBase;
+import com.github.ankowals.example.rest.base.TestBase;
 import com.github.ankowals.example.rest.client.ApiClient;
 import com.github.ankowals.example.rest.client.ApiClientFactory;
-import com.github.ankowals.example.rest.data.PersonDtoFactory;
-import com.github.ankowals.example.rest.data.PersonDtoRandomizer;
+import com.github.ankowals.example.rest.data.PersonFactory;
+import com.github.ankowals.example.rest.data.PersonRandomizer;
 import com.github.ankowals.example.rest.domain.Person;
 import com.github.ankowals.example.rest.dto.PersonDto;
+import com.github.ankowals.example.rest.mappers.PersonMapper;
 import com.github.ankowals.example.rest.repositories.PersonRepository;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
-import org.assertj.core.groups.Tuple;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static com.github.ankowals.example.rest.data.PersonDtoFactory.customize;
+import static com.github.ankowals.example.rest.data.PersonFactory.customize;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.groups.Tuple.tuple;
 
-@MicronautTest
-public class SavePersonTest extends IntegrationTestBase {
+@MicronautTest(transactional = false, rollback = false)
+public class SavePersonTest extends TestBase {
 
     @Inject
     EmbeddedServer embeddedServer;
@@ -28,8 +29,11 @@ public class SavePersonTest extends IntegrationTestBase {
     @Inject
     PersonRepository personRepository;
 
+    @Inject
+    PersonMapper mapper;
+
     ApiClient api;
-    PersonDtoFactory testData = new PersonDtoFactory(new PersonDtoRandomizer());
+    PersonFactory testData = new PersonFactory(new PersonRandomizer());
 
     @BeforeEach
     void setupApiClient() {
@@ -38,7 +42,7 @@ public class SavePersonTest extends IntegrationTestBase {
 
     @Test
     void shouldPostPerson() {
-        PersonDto personDto = testData.person();
+        PersonDto personDto = mapper.toDto(testData.person());
 
         api.savePerson(personDto)
                 .execute()
@@ -47,21 +51,16 @@ public class SavePersonTest extends IntegrationTestBase {
 
         assertThat(personRepository.findAll())
                 .extracting(Person::getName, Person::getAge)
-                .contains(Tuple.tuple(personDto.getName(), personDto.getAge()));
+                .contains(tuple(personDto.getName(), personDto.getAge()));
     }
 
     @Test
     void shouldNotAcceptPersonWithEmptyName() {
-        PersonDto personDto = customize(testData.person(), person -> person.setName(""));
+        Person person = customize(testData.person(), p -> p.setName(""));
 
-        api.savePerson(personDto)
+        api.savePerson(mapper.toDto(person))
                 .execute()
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.getCode());
-    }
-
-    @Test
-    void shouldConnectToDb() {
-        assertThat(getPostgresConnection()).isNotNull();
     }
 }

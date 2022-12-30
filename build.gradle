@@ -27,7 +27,7 @@ dependencies {
 
     implementation "io.micronaut.flyway:micronaut-flyway"
 
-    runtimeOnly "com.h2database:h2"
+    //runtimeOnly "com.h2database:h2"
     runtimeOnly "org.postgresql:postgresql:42.5.1"
 
     annotationProcessor platform('io.micronaut:micronaut-bom:3.7.4')
@@ -52,7 +52,6 @@ dependencies {
     testImplementation "org.testcontainers:postgresql"
 
     testImplementation "org.assertj:assertj-core:3.23.1"
-
 }
 
 test {

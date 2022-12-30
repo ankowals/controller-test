@@ -8,8 +8,6 @@ import jakarta.inject.Singleton;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @Singleton
 public class PersonServiceImpl implements PersonService {
@@ -32,15 +30,14 @@ public class PersonServiceImpl implements PersonService {
         Person person = mapper.toPerson(personDto);
         person.setId(null);
 
-        Person saved = repository.save(person);
-
-        return mapper.toDto(saved);
+        return mapper.toDto(repository.save(person));
     }
 
     @Override
     public List<PersonDto> getPersons() {
-        return StreamSupport.stream(repository.findAll().spliterator(), false)
+        return repository.findAll()
+                .stream()
                 .map(mapper::toDto)
-                .collect(Collectors.toList());
+                .toList();
     }
 }

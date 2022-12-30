@@ -21,7 +21,7 @@ public class Person {
     @Size(min = 1, max = 20)
     private String name;
 
-    @Min(18)
+    @Min(1)
     private int age;
 
     public Person(String name, int age) {
