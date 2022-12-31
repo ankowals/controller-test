@@ -2,57 +2,47 @@ package com.github.ankowals.example.rest.tests;
 
 import com.github.ankowals.example.rest.base.TestBase;
 import com.github.ankowals.example.rest.client.ApiClient;
-import com.github.ankowals.example.rest.client.ApiClientFactory;
 import com.github.ankowals.example.rest.data.PersonFactory;
 import com.github.ankowals.example.rest.data.PersonRandomizer;
 import com.github.ankowals.example.rest.domain.Person;
 import com.github.ankowals.example.rest.dto.PersonDto;
 import com.github.ankowals.example.rest.repositories.PersonRepository;
 import io.micronaut.http.HttpStatus;
-import io.micronaut.runtime.server.EmbeddedServer;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.groups.Tuple.tuple;
 
 @MicronautTest(transactional = false, rollback = false)
 public class GetPersonsTest extends TestBase {
 
     @Inject
-    EmbeddedServer embeddedServer;
-
-    @Inject
     PersonRepository personRepository;
 
-    ApiClient api;
-    PersonFactory testData = new PersonFactory(new PersonRandomizer());
+    @Inject
+    ApiClient apiClient;
 
-    @BeforeEach
-    void setupApiClient() {
-        api = ApiClientFactory.getClient(embeddedServer.getURI());
-    }
+    PersonFactory personFactory = new PersonFactory(new PersonRandomizer());
 
     @Test
     void shouldReturnPersons() {
-        Stream.of(testData.person(),
-                  testData.person(),
-                  testData.person())
+        Stream.of(personFactory.person(),
+                  personFactory.person(),
+                  personFactory.person())
                 .parallel()
                 .forEach(person -> personRepository.save(person));
 
-        assertThat(api.getPersons().asDto())
+        assertThat(apiClient.getPersons().asDto())
                 .isNotEmpty()
                 .hasSizeGreaterThanOrEqualTo(3);
     }
 
     @Test
     void shouldReturnPerson() {
-        Person expected = testData.person();
+        Person expected = personFactory.person();
         personRepository.save(expected);
 
         Long id = personRepository.findByName(expected.getName()).stream()
@@ -60,7 +50,7 @@ public class GetPersonsTest extends TestBase {
                 .orElseThrow()
                 .getId();
 
-        PersonDto actual = api.getPerson(id).asDto();
+        PersonDto actual = apiClient.getPerson(id).asDto();
 
         assertThat(actual.getName()).isEqualTo(expected.getName());
         assertThat(actual.getAge()).isEqualTo(expected.getAge());
@@ -68,7 +58,7 @@ public class GetPersonsTest extends TestBase {
 
     @Test
     void shouldReturnNotFoundWhenWrongId() {
-        api.getPerson(Long.MAX_VALUE)
+        apiClient.getPerson(Long.MAX_VALUE)
                 .execute()
                 .then()
                 .statusCode(HttpStatus.NOT_FOUND.getCode());

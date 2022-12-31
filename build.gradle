@@ -43,6 +43,8 @@ dependencies {
     testImplementation "io.micronaut.test:micronaut-test-junit5"
     testImplementation "org.junit.jupiter:junit-jupiter"
 
+    testImplementation 'org.junit.platform:junit-platform-launcher:1.9.1'
+
     testAnnotationProcessor platform("io.micronaut:micronaut-bom:3.7.4")
     testAnnotationProcessor "io.micronaut:micronaut-inject-java"
 
