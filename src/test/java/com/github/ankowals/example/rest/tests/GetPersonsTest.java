@@ -1,11 +1,11 @@
 package com.github.ankowals.example.rest.tests;
 
+import com.github.ankowals.example.rest.assertions.PersonDtoAssertion;
 import com.github.ankowals.example.rest.base.TestBase;
 import com.github.ankowals.example.rest.client.ApiClient;
 import com.github.ankowals.example.rest.data.PersonFactory;
 import com.github.ankowals.example.rest.data.PersonRandomizer;
 import com.github.ankowals.example.rest.domain.Person;
-import com.github.ankowals.example.rest.dto.PersonDto;
 import com.github.ankowals.example.rest.repositories.PersonRepository;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
@@ -50,10 +50,9 @@ public class GetPersonsTest extends TestBase {
                 .orElseThrow()
                 .getId();
 
-        PersonDto actual = apiClient.getPerson(id).asDto();
-
-        assertThat(actual.getName()).isEqualTo(expected.getName());
-        assertThat(actual.getAge()).isEqualTo(expected.getAge());
+        PersonDtoAssertion.assertThat(apiClient.getPerson(id).asDto())
+                .hasName(expected.getName())
+                .isOfAge(expected.getAge());
     }
 
     @Test
