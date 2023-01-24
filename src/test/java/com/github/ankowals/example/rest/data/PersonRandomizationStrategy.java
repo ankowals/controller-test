@@ -4,23 +4,22 @@ import com.github.ankowals.example.rest.domain.Person;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class PersonRandomizer implements RandomizationStrategy<Person> {
+public class PersonRandomizationStrategy implements RandomizationStrategy<Person> {
 
-    private final List<Consumer<Person>> rules = new ArrayList<>();
+    private final List<Consumer<Person>> rules;
 
-    public PersonRandomizer() {
-        rules.add(p -> p.setName(english(11)));
-        rules.add(p -> p.setAge(between(1, 101)));
+    public PersonRandomizationStrategy() {
+        rules = List.of(
+                p -> p.setName(english(11)),
+                p -> p.setAge(between(1, 101)));
     }
 
     @Override
     public Person randomize(Person person) {
         rules.forEach(rule -> rule.accept(person));
-
         return person;
     }
 

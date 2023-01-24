@@ -12,13 +12,18 @@ public class PersonFactory {
         this.randomizationStrategy = randomizationStrategy;
     }
 
-    public static Person customize(Person person, Consumer<Person> customizer) {
-        customizer.accept(person);
-        return person;
+    public PersonFactory() {
+        this.randomizationStrategy = person -> person;
     }
 
     public Person person() {
-        Person person = new Person();
-        return randomizationStrategy.randomize(person);
+        return randomizationStrategy.randomize(new Person());
+    }
+
+    public Person person(Consumer<Person> customizer) {
+        Person person = person();
+        customizer.accept(person);
+
+        return person;
     }
 }

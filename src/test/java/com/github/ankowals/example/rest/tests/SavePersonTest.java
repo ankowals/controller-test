@@ -3,7 +3,7 @@ package com.github.ankowals.example.rest.tests;
 import com.github.ankowals.example.rest.base.TestBase;
 import com.github.ankowals.example.rest.client.ApiClient;
 import com.github.ankowals.example.rest.data.PersonFactory;
-import com.github.ankowals.example.rest.data.PersonRandomizer;
+import com.github.ankowals.example.rest.data.PersonRandomizationStrategy;
 import com.github.ankowals.example.rest.domain.Person;
 import com.github.ankowals.example.rest.dto.PersonDto;
 import com.github.ankowals.example.rest.mappers.PersonMapper;
@@ -13,7 +13,6 @@ import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 
-import static com.github.ankowals.example.rest.data.PersonFactory.customize;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 
@@ -29,7 +28,7 @@ public class SavePersonTest extends TestBase {
     @Inject
     ApiClient apiClient;
 
-    PersonFactory personFactory = new PersonFactory(new PersonRandomizer());
+    PersonFactory personFactory = new PersonFactory(new PersonRandomizationStrategy());
 
     @Test
     void shouldPostPerson() {
@@ -47,7 +46,7 @@ public class SavePersonTest extends TestBase {
 
     @Test
     void shouldNotAcceptPersonWithEmptyName() {
-        Person person = customize(personFactory.person(), p -> p.setName(""));
+        Person person = personFactory.person(p -> p.setName(""));
 
         apiClient.savePerson(personMapper.toDto(person))
                 .execute()
