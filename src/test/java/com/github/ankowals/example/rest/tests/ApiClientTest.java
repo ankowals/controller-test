@@ -16,7 +16,9 @@ import org.testcontainers.shaded.org.awaitility.core.ConditionTimeoutException;
 
 import java.util.function.Predicate;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
 @MicronautTest(transactional = false, rollback = false)
 public class ApiClientTest extends TestBase {
@@ -55,8 +57,15 @@ public class ApiClientTest extends TestBase {
                 .orElseThrow()
                 .getId();
 
-        Predicate<Response> predicate = response -> response.as(PersonDto.class).getName().equals(expected.getName());
+        Predicate<Response> predicate = response -> response.as(PersonDto.class)
+                                                            .getName()
+                                                            .equals(expected.getName());
 
-        Assertions.assertThatCode(() -> apiClient.getPerson(id).executeUntil(predicate)).doesNotThrowAnyException();
+        Assertions.assertThatCode(() ->
+                apiClient.getPerson(id).executeUntil(predicate)).doesNotThrowAnyException();
+
+        //alternatively
+        await().untilAsserted(() ->
+                assertThat(apiClient.getPerson(id).asDto().getName().equals(expected.getName())));
     }
 }
