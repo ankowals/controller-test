@@ -7,6 +7,7 @@ import com.github.ankowals.example.rest.data.PersonRandomizationStrategy;
 import com.github.ankowals.example.rest.domain.Person;
 import com.github.ankowals.example.rest.dto.PersonDto;
 import com.github.ankowals.example.rest.repositories.PersonRepository;
+import io.micronaut.http.HttpStatus;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import io.restassured.response.Response;
 import jakarta.inject.Inject;
@@ -27,7 +28,7 @@ public class ApiClientTest extends TestBase {
     PersonRepository personRepository;
 
     @Inject
-    ApiClient apiClient;
+    ApiClient api;
 
     PersonFactory personFactory = new PersonFactory(new PersonRandomizationStrategy());
 
@@ -44,7 +45,7 @@ public class ApiClientTest extends TestBase {
         Predicate<Response> predicate = response -> response.as(PersonDto.class).getName().equals("terefere");
 
         assertThatExceptionOfType(ConditionTimeoutException.class)
-                .isThrownBy(() -> apiClient.getPerson(id).executeUntil(predicate));
+                .isThrownBy(() -> api.getPerson(id).executeUntil(predicate));
     }
 
     @Test
@@ -62,10 +63,14 @@ public class ApiClientTest extends TestBase {
                                                             .equals(expected.getName());
 
         Assertions.assertThatCode(() ->
-                apiClient.getPerson(id).executeUntil(predicate)).doesNotThrowAnyException();
+                api.getPerson(id).executeUntil(predicate)).doesNotThrowAnyException();
 
         //alternatively
-        await().untilAsserted(() ->
-                assertThat(apiClient.getPerson(id).asDto().getName().equals(expected.getName())));
+        await().untilAsserted(() -> {
+            PersonDto actual = api.getPerson(id)
+                    .execute(response -> response.statusCode(HttpStatus.OK.getCode()));
+
+            assertThat(actual.getName()).isEqualTo(expected.getName());
+        });
     }
 }

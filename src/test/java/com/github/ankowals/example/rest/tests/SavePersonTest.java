@@ -26,7 +26,7 @@ public class SavePersonTest extends TestBase {
     PersonMapper personMapper;
 
     @Inject
-    ApiClient apiClient;
+    ApiClient api;
 
     PersonFactory personFactory = new PersonFactory(new PersonRandomizationStrategy());
 
@@ -34,7 +34,7 @@ public class SavePersonTest extends TestBase {
     void shouldPostPerson() {
         PersonDto personDto = personMapper.toDto(personFactory.person());
 
-        apiClient.savePerson(personDto)
+        api.savePerson(personDto)
                 .execute()
                 .then()
                 .statusCode(HttpStatus.CREATED.getCode());
@@ -48,7 +48,7 @@ public class SavePersonTest extends TestBase {
     void shouldNotAcceptPersonWithEmptyName() {
         Person person = personFactory.person(p -> p.setName(""));
 
-        apiClient.savePerson(personMapper.toDto(person))
+        api.savePerson(personMapper.toDto(person))
                 .execute()
                 .then()
                 .statusCode(HttpStatus.BAD_REQUEST.getCode());

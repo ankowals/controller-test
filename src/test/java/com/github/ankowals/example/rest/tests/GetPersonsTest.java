@@ -10,16 +10,12 @@ import com.github.ankowals.example.rest.dto.PersonDto;
 import com.github.ankowals.example.rest.repositories.PersonRepository;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
-import io.restassured.response.Response;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
-import org.testcontainers.shaded.org.awaitility.core.ConditionTimeoutException;
 
-import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 @MicronautTest(transactional = false, rollback = false)
 public class GetPersonsTest extends TestBase {
@@ -28,7 +24,7 @@ public class GetPersonsTest extends TestBase {
     PersonRepository personRepository;
 
     @Inject
-    ApiClient apiClient;
+    ApiClient api;
 
     PersonFactory personFactory = new PersonFactory(new PersonRandomizationStrategy());
 
@@ -40,7 +36,10 @@ public class GetPersonsTest extends TestBase {
                 .parallel()
                 .forEach(person -> personRepository.save(person));
 
-        assertThat(apiClient.getPersons().asDto())
+        PersonDto[] persons = api.getPersons()
+                .execute(response -> response.statusCode(HttpStatus.OK.getCode()));
+
+        assertThat(persons)
                 .isNotEmpty()
                 .hasSizeGreaterThanOrEqualTo(3);
     }
@@ -55,14 +54,17 @@ public class GetPersonsTest extends TestBase {
                 .orElseThrow()
                 .getId();
 
-        PersonDtoAssertion.assertThat(apiClient.getPerson(id).asDto())
+        PersonDto actual = api.getPerson(id)
+                .execute(response -> response.statusCode(HttpStatus.OK.getCode()));
+
+        PersonDtoAssertion.assertThat(actual)
                 .hasName(expected.getName())
                 .isOfAge(expected.getAge());
     }
 
     @Test
     void shouldReturnNotFoundWhenWrongId() {
-        apiClient.getPerson(Long.MAX_VALUE)
+        api.getPerson(Long.MAX_VALUE)
                 .execute()
                 .then()
                 .statusCode(HttpStatus.NOT_FOUND.getCode());

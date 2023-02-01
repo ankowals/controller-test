@@ -5,15 +5,17 @@ import com.github.ankowals.example.rest.dto.PersonDto;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.internal.mapping.Jackson2Mapper;
 import io.restassured.response.Response;
+import io.restassured.response.ValidatableResponse;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import static io.restassured.RestAssured.given;
 import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
-public class GetPersonRequest implements ExecutableRequest {
+public class GetPersonRequest implements ValidatableResponseExecutableResponse<PersonDto> {
 
     private final RequestSpecBuilder requestSpecBuilder;
 
@@ -31,9 +33,13 @@ public class GetPersonRequest implements ExecutableRequest {
                 .get("/persons/{id}");
     }
 
-    public PersonDto asDto() {
-        return execute()
-                .as(PersonDto.class, new Jackson2Mapper(((type, charset) -> JacksonMapperFactory.create())));
+    @Override
+    public PersonDto execute(Consumer<ValidatableResponse> expression) {
+        Response response = execute();
+        expression.accept(response.then());
+
+        return response.as(PersonDto.class,
+                new Jackson2Mapper(((type, charset) -> JacksonMapperFactory.create())));
     }
 
     public Response executeUntil(Predicate<Response> predicate) {

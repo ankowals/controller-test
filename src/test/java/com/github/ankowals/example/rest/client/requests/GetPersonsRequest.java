@@ -5,10 +5,13 @@ import com.github.ankowals.example.rest.dto.PersonDto;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.internal.mapping.Jackson2Mapper;
 import io.restassured.response.Response;
+import io.restassured.response.ValidatableResponse;
+
+import java.util.function.Consumer;
 
 import static io.restassured.RestAssured.given;
 
-public class GetPersonsRequest implements ExecutableRequest {
+public class GetPersonsRequest implements ValidatableResponseExecutableResponse<PersonDto[]> {
 
     private final RequestSpecBuilder requestSpecBuilder;
 
@@ -25,8 +28,12 @@ public class GetPersonsRequest implements ExecutableRequest {
                 .get("/persons");
     }
 
-    public PersonDto[] asDto() {
-        return execute()
-                .as(PersonDto[].class, new Jackson2Mapper(((type, charset) -> JacksonMapperFactory.create())));
+    @Override
+    public PersonDto[] execute(Consumer<ValidatableResponse> expression) {
+        Response response = execute();
+        expression.accept(response.then());
+
+        return response.as(PersonDto[].class,
+                new Jackson2Mapper(((type, charset) -> JacksonMapperFactory.create())));
     }
 }
