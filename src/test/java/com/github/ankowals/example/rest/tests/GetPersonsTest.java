@@ -13,7 +13,7 @@ import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 
-import java.util.stream.Stream;
+import java.util.List;
 
 import static com.github.ankowals.example.rest.client.ValidatableResponseConsumers.andValidateStatusCodeIs;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,17 +31,19 @@ public class GetPersonsTest extends TestBase {
 
     @Test
     void shouldReturnPersons() {
-        Stream.of(personFactory.person(),
-                  personFactory.person(),
-                  personFactory.person())
-                .parallel()
+        List<Person> persons = List.of(personFactory.person(),
+                personFactory.person(),
+                personFactory.person());
+
+        persons.stream().parallel()
                 .forEach(person -> personRepository.save(person));
 
-        PersonDto[] persons = api.getPersons().execute(andValidateStatusCodeIs(HttpStatus.OK));
+        PersonDto[] actualPersons = api.getPersons().execute(andValidateStatusCodeIs(HttpStatus.OK));
 
-        assertThat(persons)
-                .isNotEmpty()
-                .hasSizeGreaterThanOrEqualTo(3);
+        assertThat(actualPersons)
+                .hasSizeGreaterThanOrEqualTo(3)
+                .extracting(PersonDto::getName)
+                .containsAll(persons.stream().map(Person::getName).toList());
     }
 
     @Test
@@ -54,9 +56,9 @@ public class GetPersonsTest extends TestBase {
                 .orElseThrow()
                 .getId();
 
-        PersonDto actual = api.getPerson(id).execute(andValidateStatusCodeIs(HttpStatus.OK));
+        PersonDto actualPerson = api.getPerson(id).execute(andValidateStatusCodeIs(HttpStatus.OK));
 
-        PersonDtoAssertion.assertThat(actual)
+        PersonDtoAssertion.assertThat(actualPerson)
                 .hasName(expected.getName())
                 .isOfAge(expected.getAge());
     }
