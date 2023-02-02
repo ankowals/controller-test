@@ -35,13 +35,11 @@ public class GetPersonsTest extends TestBase {
                 personFactory.person(),
                 personFactory.person());
 
-        persons.stream().parallel()
-                .forEach(person -> personRepository.save(person));
+        persons.forEach(person -> personRepository.save(person));
 
         PersonDto[] actualPersons = api.getPersons().execute(andValidateStatusCodeIs(HttpStatus.OK));
 
         assertThat(actualPersons)
-                .hasSizeGreaterThanOrEqualTo(3)
                 .extracting(PersonDto::getName)
                 .containsAll(persons.stream().map(Person::getName).toList());
     }

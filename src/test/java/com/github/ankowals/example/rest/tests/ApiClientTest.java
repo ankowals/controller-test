@@ -43,10 +43,8 @@ public class ApiClientTest extends TestBase {
                 .orElseThrow()
                 .getId();
 
-        Predicate<Response> predicate = response -> response.as(PersonDto.class).getName().equals("terefere");
-
         assertThatExceptionOfType(ConditionTimeoutException.class)
-                .isThrownBy(() -> api.getPerson(id).executeUntil(predicate));
+                .isThrownBy(() -> api.getPerson(id).executeUntil(personNameEquals("terefere")));
     }
 
     @Test
@@ -59,19 +57,19 @@ public class ApiClientTest extends TestBase {
                 .orElseThrow()
                 .getId();
 
-        Predicate<Response> predicate = response -> response.as(PersonDto.class)
-                                                            .getName()
-                                                            .equals(expected.getName());
-
         Assertions.assertThatCode(() ->
-                api.getPerson(id).executeUntil(predicate)).doesNotThrowAnyException();
+                api.getPerson(id).executeUntil(personNameEquals(expected.getName()))).doesNotThrowAnyException();
 
         //alternatively
         await().untilAsserted(() -> {
-            PersonDto actual = api.getPerson(id)
-                    .execute(andValidateStatusCodeIs(HttpStatus.OK));
-
+            PersonDto actual = api.getPerson(id).execute(andValidateStatusCodeIs(HttpStatus.OK));
             assertThat(actual.getName()).isEqualTo(expected.getName());
         });
+    }
+
+    private Predicate<Response> personNameEquals(String expectedName) {
+        return response -> response.as(PersonDto.class)
+                .getName()
+                .equals(expectedName);
     }
 }
