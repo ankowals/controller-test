@@ -1,6 +1,7 @@
-package com.github.ankowals.example.rest.client.requests;
+package com.github.ankowals.example.rest.client.requests.person;
 
 import com.github.ankowals.example.rest.client.JacksonMapperFactory;
+import com.github.ankowals.example.rest.client.requests.DtoReturningExecutableRequest;
 import com.github.ankowals.example.rest.dto.PersonDto;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.internal.mapping.Jackson2Mapper;
@@ -11,7 +12,7 @@ import java.util.function.Consumer;
 
 import static io.restassured.RestAssured.given;
 
-public class GetPersonsRequest implements ValidatableResponseExecutableResponse<PersonDto[]> {
+public class GetPersonsRequest implements DtoReturningExecutableRequest<PersonDto[]> {
 
     private final RequestSpecBuilder requestSpecBuilder;
 

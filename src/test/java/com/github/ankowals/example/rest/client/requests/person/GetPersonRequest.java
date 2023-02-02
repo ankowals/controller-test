@@ -1,6 +1,7 @@
-package com.github.ankowals.example.rest.client.requests;
+package com.github.ankowals.example.rest.client.requests.person;
 
 import com.github.ankowals.example.rest.client.JacksonMapperFactory;
+import com.github.ankowals.example.rest.client.requests.DtoReturningExecutableRequest;
 import com.github.ankowals.example.rest.dto.PersonDto;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.internal.mapping.Jackson2Mapper;
@@ -15,7 +16,7 @@ import java.util.function.Predicate;
 import static io.restassured.RestAssured.given;
 import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
-public class GetPersonRequest implements ValidatableResponseExecutableResponse<PersonDto> {
+public class GetPersonRequest implements DtoReturningExecutableRequest<PersonDto> {
 
     private final RequestSpecBuilder requestSpecBuilder;
 

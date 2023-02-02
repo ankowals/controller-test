@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.stream.Stream;
 
+import static com.github.ankowals.example.rest.client.ValidatableResponseConsumers.andValidateStatusCodeIs;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @MicronautTest(transactional = false, rollback = false)
@@ -36,8 +37,7 @@ public class GetPersonsTest extends TestBase {
                 .parallel()
                 .forEach(person -> personRepository.save(person));
 
-        PersonDto[] persons = api.getPersons()
-                .execute(response -> response.statusCode(HttpStatus.OK.getCode()));
+        PersonDto[] persons = api.getPersons().execute(andValidateStatusCodeIs(HttpStatus.OK));
 
         assertThat(persons)
                 .isNotEmpty()
@@ -54,8 +54,7 @@ public class GetPersonsTest extends TestBase {
                 .orElseThrow()
                 .getId();
 
-        PersonDto actual = api.getPerson(id)
-                .execute(response -> response.statusCode(HttpStatus.OK.getCode()));
+        PersonDto actual = api.getPerson(id).execute(andValidateStatusCodeIs(HttpStatus.OK));
 
         PersonDtoAssertion.assertThat(actual)
                 .hasName(expected.getName())

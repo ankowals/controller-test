@@ -4,6 +4,6 @@ import io.restassured.response.ValidatableResponse;
 
 import java.util.function.Consumer;
 
-public interface ValidatableResponseExecutableResponse<T> extends ExecutableRequest {
+public interface DtoReturningExecutableRequest<T> extends ExecutableRequest {
     T execute(Consumer<ValidatableResponse> expression);
 }

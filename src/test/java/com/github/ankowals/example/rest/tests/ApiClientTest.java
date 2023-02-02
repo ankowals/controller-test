@@ -17,6 +17,7 @@ import org.testcontainers.shaded.org.awaitility.core.ConditionTimeoutException;
 
 import java.util.function.Predicate;
 
+import static com.github.ankowals.example.rest.client.ValidatableResponseConsumers.andValidateStatusCodeIs;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
@@ -68,7 +69,7 @@ public class ApiClientTest extends TestBase {
         //alternatively
         await().untilAsserted(() -> {
             PersonDto actual = api.getPerson(id)
-                    .execute(response -> response.statusCode(HttpStatus.OK.getCode()));
+                    .execute(andValidateStatusCodeIs(HttpStatus.OK));
 
             assertThat(actual.getName()).isEqualTo(expected.getName());
         });

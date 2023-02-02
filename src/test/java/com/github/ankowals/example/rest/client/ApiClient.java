@@ -1,6 +1,8 @@
 package com.github.ankowals.example.rest.client;
 
-import com.github.ankowals.example.rest.client.requests.*;
+import com.github.ankowals.example.rest.client.requests.person.GetPersonRequest;
+import com.github.ankowals.example.rest.client.requests.person.GetPersonsRequest;
+import com.github.ankowals.example.rest.client.requests.person.SavePersonRequest;
 import com.github.ankowals.example.rest.dto.PersonDto;
 import io.restassured.builder.RequestSpecBuilder;
 
@@ -14,11 +16,11 @@ public class ApiClient {
         this.requestSpecBuilderSupplier = requestSpecBuilderSupplier;
     }
 
-    public ExecutableRequest savePerson(PersonDto personDto) {
+    public SavePersonRequest savePerson(PersonDto personDto) {
         return new SavePersonRequest(requestSpecBuilderSupplier.get(), personDto);
     }
 
-    public ValidatableResponseExecutableResponse<PersonDto[]> getPersons() {
+    public GetPersonsRequest getPersons() {
         return new GetPersonsRequest(requestSpecBuilderSupplier.get());
     }
 
