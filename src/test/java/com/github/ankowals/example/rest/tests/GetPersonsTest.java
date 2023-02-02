@@ -13,6 +13,7 @@ import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.List;
 
 import static com.github.ankowals.example.rest.client.ValidatableResponseConsumers.andValidateStatusCodeIs;
@@ -34,6 +35,19 @@ public class GetPersonsTest extends TestBase {
         List<Person> persons = List.of(personFactory.person(),
                 personFactory.person(),
                 personFactory.person());
+
+        persons.forEach(person -> personRepository.save(person));
+
+        PersonDto[] actualPersons = api.getPersons().execute(andValidateStatusCodeIs(HttpStatus.OK));
+
+        assertThat(actualPersons)
+                .extracting(PersonDto::getName)
+                .containsAll(persons.stream().map(Person::getName).toList());
+    }
+
+    @Test
+    void shouldReturnPersonsFromFile() throws IOException {
+        List<Person> persons = personFactory.persons("/persons.json");
 
         persons.forEach(person -> personRepository.save(person));
 

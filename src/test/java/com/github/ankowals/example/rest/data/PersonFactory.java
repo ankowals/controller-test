@@ -32,12 +32,12 @@ public class PersonFactory {
         return person;
     }
 
-    public Person personFrom(String filename) throws IOException {
+    public Person person(String filename) throws IOException {
         Person person = readResourceFileAs(filename, Person.class);
         return randomizationStrategy.randomize(person);
     }
 
-    public List<Person> personsFrom(String filename) throws IOException {
+    public List<Person> persons(String filename) throws IOException {
         List<Person> persons = List.of(readResourceFileAs(filename, Person[].class));
         persons.forEach(randomizationStrategy::randomize);
 

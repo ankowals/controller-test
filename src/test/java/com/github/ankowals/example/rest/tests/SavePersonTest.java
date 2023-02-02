@@ -13,6 +13,8 @@ import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 
@@ -31,8 +33,9 @@ public class SavePersonTest extends TestBase {
     PersonFactory personFactory = new PersonFactory(new PersonRandomizationStrategy());
 
     @Test
-    void shouldPostPerson() {
-        PersonDto personDto = personMapper.toDto(personFactory.person());
+    void shouldPostPerson() throws IOException {
+        Person person = personFactory.person("/person.json");
+        PersonDto personDto = personMapper.toDto(person);
 
         api.savePerson(personDto)
                 .execute()
