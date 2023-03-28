@@ -38,14 +38,11 @@ public class PostgresDb {
     }
 
     private PostgreSQLContainer<?> createContainer(DockerImageName dockerImageName) {
-        try(PostgreSQLContainer<?> container = new PostgreSQLContainer<>(dockerImageName)
-                .withDatabaseName("postgres")
-                .withUsername("postgres")
-                .withPassword("postgres")
-                .withExposedPorts(5432)
-                .withReuse(true)) {
-
-            return container;
-        }
+            return new PostgreSQLContainer<>(dockerImageName)
+                    .withDatabaseName("postgres")
+                    .withUsername("postgres")
+                    .withPassword("postgres")
+                    .withExposedPorts(5432)
+                    .withReuse(true);
     }
 }

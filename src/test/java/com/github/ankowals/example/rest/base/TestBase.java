@@ -1,6 +1,6 @@
 package com.github.ankowals.example.rest.base;
 
-import com.github.ankowals.example.rest.environment.StartsPostgres;
+import com.github.ankowals.example.rest.environment.UsesPostgres;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.test.support.TestPropertyProvider;
 import org.junit.jupiter.api.TestInstance;
@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class TestBase implements StartsPostgres, TestPropertyProvider {
+public class TestBase implements UsesPostgres, TestPropertyProvider {
 
     @NonNull
     @Override

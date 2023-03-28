@@ -1,0 +1,27 @@
+[
+  {
+    "personName": "Macius",
+    "personId": 1,
+    "personAge": 9
+  },
+  {
+    "personName": "Olek",
+    "personId": 2,
+    "personAge": 81
+  },
+  {
+    "personName": "Wojtek",
+    "personId": 3,
+    "personAge": 18
+  },
+  {
+    "personName": "Marek",
+    "personId": 4,
+    "personAge": 77
+  },
+  {
+    "personName": "Robert",
+    "personId": 5,
+    "personAge": 100
+  }
+]

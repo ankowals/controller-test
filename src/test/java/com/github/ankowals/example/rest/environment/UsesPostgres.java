@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
 
-public interface StartsPostgres {
+public interface UsesPostgres {
 
     PostgresDb POSTGRES_DB = PostgresDb.start();
 
