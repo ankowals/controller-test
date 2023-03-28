@@ -10,11 +10,13 @@ import com.github.ankowals.example.rest.mappers.PersonMapper;
 import com.github.ankowals.example.rest.repositories.PersonRepository;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
+import io.restassured.response.Response;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 
+import static com.github.ankowals.example.rest.assertions.ErrorDtoListAssertion.assertThatErrorsFrom;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 
@@ -51,9 +53,11 @@ public class SavePersonTest extends TestBase {
     void shouldNotAcceptPersonWithEmptyName() {
         Person person = personFactory.person(p -> p.setName(""));
 
-        api.savePerson(personMapper.toDto(person))
-                .execute()
-                .then()
-                .statusCode(HttpStatus.BAD_REQUEST.getCode());
+        Response response = api.savePerson(personMapper.toDto(person)).execute();
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST.getCode());
+        assertThatErrorsFrom(response).containMessages(
+                "entity.name: can not be empty",
+                "entity.name: size must be between 1 and 20");
     }
 }
