@@ -1,6 +1,7 @@
 package com.github.ankowals.example.rest.data;
 
 import com.github.ankowals.example.rest.domain.Person;
+import com.github.ankowals.example.rest.framework.data.RandomizationStrategy;
 import jakarta.inject.Singleton;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;

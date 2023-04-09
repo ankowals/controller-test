@@ -1,4 +1,4 @@
-package com.github.ankowals.example.rest.environment;
+package com.github.ankowals.example.rest.framework.environment;
 
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.utility.DockerImageName;

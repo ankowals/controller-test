@@ -1,4 +1,4 @@
-package com.github.ankowals.example.rest.client;
+package com.github.ankowals.example.rest.framework.client;
 
 import io.micronaut.http.HttpStatus;
 import io.restassured.response.ValidatableResponse;

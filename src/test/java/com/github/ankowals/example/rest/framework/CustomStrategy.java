@@ -1,4 +1,4 @@
-package com.github.ankowals.example.rest.base;
+package com.github.ankowals.example.rest.framework;
 
 import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.support.hierarchical.ParallelExecutionConfiguration;

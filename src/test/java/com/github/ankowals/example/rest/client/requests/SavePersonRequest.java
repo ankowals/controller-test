@@ -1,7 +1,7 @@
-package com.github.ankowals.example.rest.client.requests.person;
+package com.github.ankowals.example.rest.client.requests;
 
-import com.github.ankowals.example.rest.client.requests.FunctionAcceptingExecutableRequest;
-import com.github.ankowals.example.rest.client.requests.ResponseSpecificationAcceptingExecutableRequest;
+import com.github.ankowals.example.rest.framework.client.requests.FunctionAcceptingExecutableRequest;
+import com.github.ankowals.example.rest.framework.client.requests.ResponseSpecificationAcceptingExecutableRequest;
 import com.github.ankowals.example.rest.dto.PersonDto;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.response.Response;

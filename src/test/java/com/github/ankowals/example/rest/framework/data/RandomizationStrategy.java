@@ -1,4 +1,4 @@
-package com.github.ankowals.example.rest.data;
+package com.github.ankowals.example.rest.framework.data;
 
 @FunctionalInterface
 public interface RandomizationStrategy<T> {

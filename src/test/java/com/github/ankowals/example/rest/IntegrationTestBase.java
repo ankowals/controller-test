@@ -1,4 +1,4 @@
-package com.github.ankowals.example.rest.base;
+package com.github.ankowals.example.rest;
 
 import com.github.ankowals.example.rest.environment.UsesPostgres;
 import io.micronaut.core.annotation.NonNull;

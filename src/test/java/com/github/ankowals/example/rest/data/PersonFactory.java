@@ -3,6 +3,7 @@ package com.github.ankowals.example.rest.data;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.ankowals.example.rest.client.JacksonMapperFactory;
 import com.github.ankowals.example.rest.domain.Person;
+import com.github.ankowals.example.rest.framework.data.RandomizationStrategy;
 import io.micronaut.core.annotation.Creator;
 import jakarta.inject.Singleton;
 

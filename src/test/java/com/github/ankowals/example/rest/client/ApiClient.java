@@ -1,8 +1,8 @@
 package com.github.ankowals.example.rest.client;
 
-import com.github.ankowals.example.rest.client.requests.person.GetPersonRequest;
-import com.github.ankowals.example.rest.client.requests.person.GetPersonsRequest;
-import com.github.ankowals.example.rest.client.requests.person.SavePersonRequest;
+import com.github.ankowals.example.rest.client.requests.GetPersonRequest;
+import com.github.ankowals.example.rest.client.requests.GetPersonsRequest;
+import com.github.ankowals.example.rest.client.requests.SavePersonRequest;
 import com.github.ankowals.example.rest.dto.PersonDto;
 import io.restassured.builder.RequestSpecBuilder;
 

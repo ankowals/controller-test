@@ -1,7 +1,7 @@
 package com.github.ankowals.example.rest.tests;
 
 import com.github.ankowals.example.rest.assertions.PersonDtoAssertion;
-import com.github.ankowals.example.rest.base.IntegrationTestBase;
+import com.github.ankowals.example.rest.IntegrationTestBase;
 import com.github.ankowals.example.rest.client.ApiClient;
 import com.github.ankowals.example.rest.client.dto.ErrorDto;
 import com.github.ankowals.example.rest.data.PersonFactory;
@@ -19,7 +19,7 @@ import java.util.List;
 
 import static com.github.ankowals.example.rest.assertions.ErrorDtoListAssertion.assertThatErrorsFrom;
 import static com.github.ankowals.example.rest.client.ResponseSpecificationFactory.andExpectStatusCode;
-import static com.github.ankowals.example.rest.client.ValidatableResponseConsumers.andExtractBecause;
+import static com.github.ankowals.example.rest.framework.client.ValidatableResponseConsumers.andExtractBecause;
 import static com.github.ankowals.example.rest.client.ValidatableResponseFunctions.andExtractErrorsBecause;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;

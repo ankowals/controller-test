@@ -1,5 +1,7 @@
 package com.github.ankowals.example.rest.environment;
 
+import com.github.ankowals.example.rest.framework.environment.PostgresDb;
+
 import java.sql.Connection;
 import java.util.HashMap;
 import java.util.Map;
