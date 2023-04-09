@@ -14,11 +14,10 @@ public class PostgresDb {
 
     private PostgresDb(DockerImageName dockerImageName) throws SQLException {
         this.container = createContainer(dockerImageName);
-        container.start();
-
-        this.connection = DriverManager.getConnection(container.getJdbcUrl(),
-                container.getUsername(),
-                container.getPassword());
+        this.container.start();
+        this.connection = DriverManager.getConnection(this.container.getJdbcUrl(),
+                this.container.getUsername(),
+                this.container.getPassword());
     }
 
     public static PostgresDb start() {
@@ -30,11 +29,11 @@ public class PostgresDb {
     }
 
     public Connection getConnection()  {
-        return connection;
+        return this.connection;
     }
 
     public PostgreSQLContainer<?> getContainer() {
-        return container;
+        return this.container;
     }
 
     private PostgreSQLContainer<?> createContainer(DockerImageName dockerImageName) {

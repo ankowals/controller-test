@@ -1,6 +1,6 @@
 package com.github.ankowals.example.rest.assertions;
 
-import io.restassured.response.Response;
+import com.github.ankowals.example.rest.client.dto.ErrorDto;
 import org.assertj.core.api.AbstractAssert;
 import org.assertj.core.api.AbstractListAssert;
 import org.assertj.core.api.Assertions;
@@ -17,13 +17,12 @@ public class ErrorDtoListAssertion extends AbstractListAssert<ErrorDtoListAssert
         return new ErrorDtoListAssertion(actual, ErrorDtoListAssertion.class);
     }
 
-    public static ErrorDtoListAssertion assertThatErrorsFrom(Response response) {
-        List<ErrorDto> actual = response.getBody().jsonPath().getList("_embedded.errors", ErrorDto.class);
-        return new ErrorDtoListAssertion(actual, ErrorDtoListAssertion.class);
+    public static ErrorDtoListAssertion assertThatErrorsFrom(List<ErrorDto> errors) {
+        return new ErrorDtoListAssertion(errors, ErrorDtoListAssertion.class);
     }
 
     public ErrorDtoListAssertion containMessages(String... messages) {
-        Assertions.assertThat(actual)
+        Assertions.assertThat(this.actual)
                 .extracting(ErrorDto::getMessage)
                 .contains(messages);
 

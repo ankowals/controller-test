@@ -1,11 +1,11 @@
-package com.github.ankowals.example.rest.assertions;
+package com.github.ankowals.example.rest.client.dto;
 
 public class ErrorDto {
 
     private String message;
 
     public String getMessage() {
-        return message;
+        return this.message;
     }
 
     public void setMessage(String message) {

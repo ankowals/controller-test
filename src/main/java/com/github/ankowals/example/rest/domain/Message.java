@@ -17,7 +17,7 @@ public class Message {
     }
 
     public int getCode() {
-        return code;
+        return this.code;
     }
 
     public void setMessage(String message) {
@@ -25,6 +25,6 @@ public class Message {
     }
 
     public String getMessage() {
-        return message;
+        return this.message;
     }
 }

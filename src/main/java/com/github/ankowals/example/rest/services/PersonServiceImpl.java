@@ -22,22 +22,23 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public Optional<PersonDto> getPerson(Long id) {
-        return repository.findById(id).map(mapper::toDto);
+        return this.repository.findById(id)
+                .map(this.mapper::toDto);
     }
 
     @Override
     public PersonDto addPerson(PersonDto personDto) {
-        Person person = mapper.toPerson(personDto);
+        Person person = this.mapper.toPerson(personDto);
         person.setId(null);
 
-        return mapper.toDto(repository.save(person));
+        return this.mapper.toDto(this.repository.save(person));
     }
 
     @Override
     public List<PersonDto> getPersons() {
-        return repository.findAll()
+        return this.repository.findAll()
                 .stream()
-                .map(mapper::toDto)
+                .map(this.mapper::toDto)
                 .toList();
     }
 }

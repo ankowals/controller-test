@@ -1,13 +1,14 @@
 package com.github.ankowals.example.rest.client.requests.person;
 
-import com.github.ankowals.example.rest.client.requests.ExecutableRequest;
+import com.github.ankowals.example.rest.client.requests.FunctionAcceptingExecutableRequest;
+import com.github.ankowals.example.rest.client.requests.ResponseSpecificationAcceptingExecutableRequest;
 import com.github.ankowals.example.rest.dto.PersonDto;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.response.Response;
 
 import static io.restassured.RestAssured.given;
 
-public class SavePersonRequest implements ExecutableRequest {
+public class SavePersonRequest implements FunctionAcceptingExecutableRequest, ResponseSpecificationAcceptingExecutableRequest {
 
     private final RequestSpecBuilder requestSpecBuilder;
 
@@ -21,7 +22,7 @@ public class SavePersonRequest implements ExecutableRequest {
     @Override
     public Response execute() {
         return given()
-                .spec(requestSpecBuilder.build())
+                .spec(this.requestSpecBuilder.build())
                 .when()
                 .post("/persons");
     }

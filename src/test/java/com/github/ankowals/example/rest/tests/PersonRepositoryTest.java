@@ -1,55 +1,69 @@
 package com.github.ankowals.example.rest.tests;
 
-import com.github.ankowals.example.rest.base.TestBase;
+import com.github.ankowals.example.rest.base.IntegrationTestBase;
 import com.github.ankowals.example.rest.data.PersonFactory;
-import com.github.ankowals.example.rest.data.PersonRandomizationStrategy;
 import com.github.ankowals.example.rest.domain.Person;
 import com.github.ankowals.example.rest.repositories.PersonRepository;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
 import org.assertj.core.api.Condition;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @MicronautTest(startApplication = false, transactional = false, rollback = false)
-public class PersonRepositoryTest extends TestBase {
+public class PersonRepositoryTest extends IntegrationTestBase {
 
     @Inject
     PersonRepository personRepository;
 
-    PersonFactory personFactory = new PersonFactory(new PersonRandomizationStrategy());
+    @Inject
+    PersonFactory define;
 
-    @BeforeAll
-    void seedDatabase() {
-        Stream.of(personFactory.person(),
-                  personFactory.person(p -> p.setName("Zenek")),
-                  personFactory.person(p -> p.setAge(17)))
-                .parallel().forEach(person -> personRepository.save(person));
+    @Test
+    void shouldInsertPerson() throws IOException {
+        List<Person> persons = this.define.persons("/persons.json");
+        persons.stream().parallel().forEach(person -> this.personRepository.save(person));
+
+        List<Person> actual = this.personRepository.findAll();
+
+        assertThat(actual)
+                .extracting(Person::getName)
+                .containsAll(persons.stream().map(Person::getName).toList());
     }
 
     @Test
     void shouldReturnAdultPerson() {
-        List<Person> person = personRepository.findByAgeGreaterThan(17);
+        Stream.of(this.define.person(p -> p.setAge(7)),
+                        this.define.person(p -> p.setAge(17)),
+                        this.define.person(p -> p.setAge(77)))
+                .parallel().forEach(person -> this.personRepository.save(person));
 
-        assertThat(person).isNotEmpty()
+        List<Person> actual = this.personRepository.findByAgeGreaterThan(17);
+
+        assertThat(actual).isNotEmpty()
                 .have(new Condition<>(p -> p.getAge() > 17, "be adult"));
     }
 
     @Test
     void shouldReturnZenek() {
-        List<Person> person = personRepository.findZenek();
+        Stream.of(this.define.person(p -> p.setName("Waldek")),
+                        this.define.person(p -> p.setName("Zenek")),
+                        this.define.person(p -> p.setName("Ferdek")))
+                .parallel().forEach(person -> this.personRepository.save(person));
 
-        assertThat(person).isNotEmpty()
+        List<Person> actual = this.personRepository.findZenek();
+
+        assertThat(actual).isNotEmpty()
                 .have(new Condition<>(p -> p.getName().equals("Zenek"), "named Zenek"));
     }
 
     @Test
     void shouldConnectToDb() {
-        assertThat(getPostgresConnection()).isNotNull();
+        assertThat(this.getPostgresConnection()).isNotNull();
     }
 }

@@ -7,11 +7,7 @@ import java.util.function.Consumer;
 
 public class ValidatableResponseConsumers {
 
-    public static Consumer<ValidatableResponse> andValidateStatusCodeIs(HttpStatus expectedStatusCode) {
-        return andValidateStatusCodeIs(expectedStatusCode.getCode());
-    }
-
-    public static Consumer<ValidatableResponse> andValidateStatusCodeIs(int expectedStatusCode) {
-        return response -> response.statusCode(expectedStatusCode);
+    public static Consumer<ValidatableResponse> andExtractBecause(HttpStatus expectedStatusCode) {
+        return response -> response.statusCode(expectedStatusCode.getCode());
     }
 }

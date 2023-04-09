@@ -17,14 +17,14 @@ public class ApiClient {
     }
 
     public SavePersonRequest savePerson(PersonDto personDto) {
-        return new SavePersonRequest(requestSpecBuilderSupplier.get(), personDto);
+        return new SavePersonRequest(this.requestSpecBuilderSupplier.get(), personDto);
     }
 
     public GetPersonsRequest getPersons() {
-        return new GetPersonsRequest(requestSpecBuilderSupplier.get());
+        return new GetPersonsRequest(this.requestSpecBuilderSupplier.get());
     }
 
     public GetPersonRequest getPerson(Long id) {
-        return new GetPersonRequest(requestSpecBuilderSupplier.get(), id);
+        return new GetPersonRequest(this.requestSpecBuilderSupplier.get(), id);
     }
 }

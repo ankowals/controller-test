@@ -1,25 +1,27 @@
 package com.github.ankowals.example.rest.data;
 
 import com.github.ankowals.example.rest.domain.Person;
+import jakarta.inject.Singleton;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 
 import java.util.List;
 import java.util.function.Consumer;
 
+@Singleton
 public class PersonRandomizationStrategy implements RandomizationStrategy<Person> {
 
     private final List<Consumer<Person>> rules;
 
     public PersonRandomizationStrategy() {
-        rules = List.of(
+        this.rules = List.of(
                 p -> p.setName(english(11)),
                 p -> p.setAge(between(1, 101)));
     }
 
     @Override
     public Person randomize(Person person) {
-        rules.forEach(rule -> rule.accept(person));
+        this.rules.forEach(rule -> rule.accept(person));
         return person;
     }
 

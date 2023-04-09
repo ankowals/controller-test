@@ -9,11 +9,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class TestBase implements UsesPostgres, TestPropertyProvider {
+public class IntegrationTestBase implements UsesPostgres, TestPropertyProvider {
 
     @NonNull
     @Override
     public Map<String, String> getProperties() {
-        return new HashMap<>(getPostgresProperties());
+        return new HashMap<>(this.getPostgresProperties());
     }
 }

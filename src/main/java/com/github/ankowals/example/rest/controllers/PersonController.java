@@ -25,19 +25,19 @@ public class PersonController {
 
     @Post()
     public HttpResponse<?> savePerson(@Body @Valid PersonDto personDto) {
-        personService.addPerson(personDto);
+        this.personService.addPerson(personDto);
         return HttpResponse.status(HttpStatus.CREATED)
                 .body(new Message(HttpStatus.CREATED.getCode(),"Saved successfully!"));
     }
 
     @Get(produces = MediaType.APPLICATION_JSON)
     public HttpResponse<List<PersonDto>> getPersons() {
-        return HttpResponse.status(HttpStatus.OK).body(personService.getPersons());
+        return HttpResponse.status(HttpStatus.OK).body(this.personService.getPersons());
     }
 
     @Get(uri ="/{id}", produces = MediaType.APPLICATION_JSON)
     public HttpResponse<?> getPerson(@PathVariable Long id) {
-        Optional<PersonDto> dto = personService.getPerson(id);
+        Optional<PersonDto> dto = this.personService.getPerson(id);
         return dto.isPresent() ? HttpResponse.status(HttpStatus.OK).body(dto.get()) : HttpResponse.notFound();
     }
 }

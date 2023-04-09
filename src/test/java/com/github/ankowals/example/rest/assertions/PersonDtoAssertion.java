@@ -15,12 +15,12 @@ public class PersonDtoAssertion extends AbstractAssert<PersonDtoAssertion, Perso
     }
 
     public PersonDtoAssertion hasName(String name) {
-        Assertions.assertThat(actual.getName()).isEqualTo(name);
+        Assertions.assertThat(this.actual.getName()).isEqualTo(name);
         return this;
     }
 
     public PersonDtoAssertion isOfAge(int age) {
-        Assertions.assertThat(actual.getAge()).isEqualTo(age);
+        Assertions.assertThat(this.actual.getAge()).isEqualTo(age);
         return this;
     }
 
