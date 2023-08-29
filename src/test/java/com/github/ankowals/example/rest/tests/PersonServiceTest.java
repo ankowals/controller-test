@@ -1,6 +1,5 @@
 package com.github.ankowals.example.rest.tests;
 
-import com.github.ankowals.example.rest.assertions.PersonDtoAssertion;
 import com.github.ankowals.example.rest.IntegrationTestBase;
 import com.github.ankowals.example.rest.client.ApiClient;
 import com.github.ankowals.example.rest.client.dto.ErrorDto;
@@ -12,18 +11,17 @@ import com.github.ankowals.example.rest.repositories.PersonRepository;
 import io.micronaut.http.HttpStatus;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.testcontainers.shaded.org.awaitility.Awaitility;
 
 import java.io.IOException;
 import java.util.List;
 
-import static com.github.ankowals.example.rest.assertions.ErrorDtoListAssertion.assertThatErrorsFrom;
-import static com.github.ankowals.example.rest.client.ResponseSpecificationFactory.andExpectStatusCode;
+import static com.github.ankowals.example.rest.framework.client.ResponseSpecificationFactory.andExpect;
 import static com.github.ankowals.example.rest.framework.client.ValidatableResponseConsumers.andExtractBecause;
 import static com.github.ankowals.example.rest.client.ValidatableResponseFunctions.andExtractErrorsBecause;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
-import static org.testcontainers.shaded.org.awaitility.Awaitility.await;
 
 @MicronautTest(transactional = false, rollback = false)
 public class PersonServiceTest extends IntegrationTestBase {
@@ -42,12 +40,12 @@ public class PersonServiceTest extends IntegrationTestBase {
 
     @Test
     void shouldSavePerson() throws IOException {
-        Person person = this.define.person("/person.json");
+        Person person = this.define.person("person.json");
         PersonDto personDto = this.personMapper.toDto(person);
 
-        this.api.savePerson(personDto).execute(andExpectStatusCode(HttpStatus.CREATED));
+        this.api.savePerson(personDto).execute(andExpect(HttpStatus.CREATED));
 
-        assertThat(this.personRepository.findAll())
+        Assertions.assertThat(this.personRepository.findAll())
                 .extracting(Person::getName, Person::getAge)
                 .contains(tuple(personDto.getName(), personDto.getAge()));
     }
@@ -62,7 +60,7 @@ public class PersonServiceTest extends IntegrationTestBase {
 
         PersonDto[] actual = this.api.getPersons().execute(andExtractBecause(HttpStatus.OK));
 
-        assertThat(actual)
+        Assertions.assertThat(actual)
                 .extracting(PersonDto::getName)
                 .containsAll(persons.stream().map(Person::getName).toList());
     }
@@ -77,17 +75,18 @@ public class PersonServiceTest extends IntegrationTestBase {
                 .orElseThrow()
                 .getId();
 
-        await().untilAsserted(() -> {
+        Awaitility.await().untilAsserted(() -> {
             PersonDto actual = this.api.getPerson(id).execute(andExtractBecause(HttpStatus.OK));
-            PersonDtoAssertion.assertThat(actual)
-                    .hasName(expected.getName())
-                    .isOfAge(expected.getAge());
+            Assertions.assertThat(actual)
+                            .returns(expected.getName(), PersonDto::getName)
+                            .returns(expected.getAge(), PersonDto::getAge);
         });
     }
 
+    //Sonar may return missing assertion warning
     @Test
     void shouldReturnNotFoundWhenWrongId() {
-        this.api.getPerson(Long.MAX_VALUE).execute(andExpectStatusCode(HttpStatus.NOT_FOUND));
+        this.api.getPerson(Long.MAX_VALUE).execute(andExpect(HttpStatus.NOT_FOUND));
     }
 
     @Test
@@ -98,9 +97,9 @@ public class PersonServiceTest extends IntegrationTestBase {
         List<ErrorDto> actual = this.api.savePerson(personDto)
                 .execute(andExtractErrorsBecause(HttpStatus.BAD_REQUEST));
 
-        assertThatErrorsFrom(actual).containMessages(
-                "entity.name: can not be empty",
-                "entity.name: size must be between 1 and 20");
+        Assertions.assertThat(actual)
+                .extracting(ErrorDto::getMessage)
+                .contains("entity.name: can not be empty", "entity.name: size must be between 1 and 20");
     }
 
     @Test
@@ -111,6 +110,8 @@ public class PersonServiceTest extends IntegrationTestBase {
         List<ErrorDto> actual = this.api.savePerson(personDto)
                 .execute(andExtractErrorsBecause(HttpStatus.BAD_REQUEST));
 
-        assertThatErrorsFrom(actual).containMessages("entity.age: must be greater than or equal to 1");
+        Assertions.assertThat(actual)
+                .extracting(ErrorDto::getMessage)
+                .contains("entity.age: must be greater than or equal to 1");
     }
 }

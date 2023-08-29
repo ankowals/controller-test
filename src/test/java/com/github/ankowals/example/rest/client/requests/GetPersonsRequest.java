@@ -1,16 +1,15 @@
 package com.github.ankowals.example.rest.client.requests;
 
-import com.github.ankowals.example.rest.client.JacksonMapperFactory;
+import com.github.ankowals.example.rest.framework.client.JacksonMapperFactory;
 import com.github.ankowals.example.rest.framework.client.requests.ConsumerAcceptingExecutableRequest;
 import com.github.ankowals.example.rest.dto.PersonDto;
+import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.internal.mapping.Jackson2Mapper;
 import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
 
 import java.util.function.Consumer;
-
-import static io.restassured.RestAssured.given;
 
 public class GetPersonsRequest implements ConsumerAcceptingExecutableRequest<PersonDto[]> {
 
@@ -23,7 +22,7 @@ public class GetPersonsRequest implements ConsumerAcceptingExecutableRequest<Per
 
     @Override
     public Response execute() {
-        return given()
+        return RestAssured.given()
                 .spec(this.requestSpecBuilder.build())
                 .when()
                 .get("/persons");

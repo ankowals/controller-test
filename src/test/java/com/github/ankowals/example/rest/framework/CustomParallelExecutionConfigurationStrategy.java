@@ -4,7 +4,7 @@ import org.junit.platform.engine.ConfigurationParameters;
 import org.junit.platform.engine.support.hierarchical.ParallelExecutionConfiguration;
 import org.junit.platform.engine.support.hierarchical.ParallelExecutionConfigurationStrategy;
 
-public class CustomStrategy implements ParallelExecutionConfiguration, ParallelExecutionConfigurationStrategy {
+public class CustomParallelExecutionConfigurationStrategy implements ParallelExecutionConfiguration, ParallelExecutionConfigurationStrategy {
 
     private static final int NUMBER_OF_THREADS = Runtime.getRuntime().availableProcessors();
 

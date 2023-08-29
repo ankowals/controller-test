@@ -1,4 +1,4 @@
-package com.github.ankowals.example.rest.client;
+package com.github.ankowals.example.rest.framework.client;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;

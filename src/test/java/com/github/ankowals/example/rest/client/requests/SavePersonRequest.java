@@ -3,10 +3,9 @@ package com.github.ankowals.example.rest.client.requests;
 import com.github.ankowals.example.rest.framework.client.requests.FunctionAcceptingExecutableRequest;
 import com.github.ankowals.example.rest.framework.client.requests.ResponseSpecificationAcceptingExecutableRequest;
 import com.github.ankowals.example.rest.dto.PersonDto;
+import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.response.Response;
-
-import static io.restassured.RestAssured.given;
 
 public class SavePersonRequest implements FunctionAcceptingExecutableRequest, ResponseSpecificationAcceptingExecutableRequest {
 
@@ -21,7 +20,7 @@ public class SavePersonRequest implements FunctionAcceptingExecutableRequest, Re
 
     @Override
     public Response execute() {
-        return given()
+        return RestAssured.given()
                 .spec(this.requestSpecBuilder.build())
                 .when()
                 .post("/persons");

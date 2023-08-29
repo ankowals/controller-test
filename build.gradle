@@ -54,6 +54,8 @@ dependencies {
     testImplementation "org.testcontainers:postgresql"
 
     testImplementation "org.assertj:assertj-core:3.23.1"
+
+    testImplementation "com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.14.2"
 }
 
 test {

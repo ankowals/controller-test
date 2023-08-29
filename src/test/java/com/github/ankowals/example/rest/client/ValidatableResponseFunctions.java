@@ -12,6 +12,7 @@ public class ValidatableResponseFunctions {
     public static Function<ValidatableResponse, List<ErrorDto>> andExtractErrorsBecause(HttpStatus expectedStatusCode) {
         return validatableResponse -> validatableResponse.statusCode(expectedStatusCode.getCode())
                 .extract().body()
-                .jsonPath().getList("_embedded.errors", ErrorDto.class);
+                .jsonPath()
+                .getList("_embedded.errors", ErrorDto.class);
     }
 }

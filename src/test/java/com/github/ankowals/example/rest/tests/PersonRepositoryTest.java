@@ -6,14 +6,13 @@ import com.github.ankowals.example.rest.domain.Person;
 import com.github.ankowals.example.rest.repositories.PersonRepository;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import jakarta.inject.Inject;
+import org.assertj.core.api.Assertions;
 import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Stream;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @MicronautTest(startApplication = false, transactional = false, rollback = false)
 public class PersonRepositoryTest extends IntegrationTestBase {
@@ -26,12 +25,12 @@ public class PersonRepositoryTest extends IntegrationTestBase {
 
     @Test
     void shouldInsertPerson() throws IOException {
-        List<Person> persons = this.define.persons("/persons.json");
+        List<Person> persons = this.define.persons("persons.json");
         persons.stream().parallel().forEach(person -> this.personRepository.save(person));
 
         List<Person> actual = this.personRepository.findAll();
 
-        assertThat(actual)
+        Assertions.assertThat(actual)
                 .extracting(Person::getName)
                 .containsAll(persons.stream().map(Person::getName).toList());
     }
@@ -45,7 +44,7 @@ public class PersonRepositoryTest extends IntegrationTestBase {
 
         List<Person> actual = this.personRepository.findByAgeGreaterThan(17);
 
-        assertThat(actual).isNotEmpty()
+        Assertions.assertThat(actual).isNotEmpty()
                 .have(new Condition<>(p -> p.getAge() > 17, "be adult"));
     }
 
@@ -58,12 +57,12 @@ public class PersonRepositoryTest extends IntegrationTestBase {
 
         List<Person> actual = this.personRepository.findZenek();
 
-        assertThat(actual).isNotEmpty()
+        Assertions.assertThat(actual).isNotEmpty()
                 .have(new Condition<>(p -> p.getName().equals("Zenek"), "named Zenek"));
     }
 
     @Test
     void shouldConnectToDb() {
-        assertThat(this.getPostgresConnection()).isNotNull();
+        Assertions.assertThat(this.getPostgresConnection()).isNotNull();
     }
 }
