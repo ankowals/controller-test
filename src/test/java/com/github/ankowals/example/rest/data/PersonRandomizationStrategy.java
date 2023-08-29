@@ -16,8 +16,8 @@ public class PersonRandomizationStrategy implements RandomizationStrategy<Person
 
     public PersonRandomizationStrategy() {
         this.rules = List.of(
-                p -> p.setName(english(11)),
-                p -> p.setAge(between(1, 101)));
+                p -> p.setName(this.english(11)),
+                p -> p.setAge(this.between(1, 101)));
     }
 
     @Override
