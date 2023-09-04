@@ -1,4 +1,4 @@
-package com.github.ankowals.example.rest.client.dto;
+package com.github.ankowals.example.rest.framework.client.dto;
 
 public class ErrorDto {
 

@@ -1,5 +1,6 @@
 package com.github.ankowals.example.rest.framework.client;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.ankowals.example.rest.client.ApiClient;
 import io.micronaut.context.annotation.Bean;
 import io.micronaut.context.annotation.Factory;
@@ -31,8 +32,11 @@ public class ApiClientFactory {
                 .addFilter(new ResponseLoggingFilter())
                 .setConfig(RestAssuredConfig.config().objectMapperConfig(
                         ObjectMapperConfig.objectMapperConfig().jackson2ObjectMapperFactory(
-                                (cls, charset) ->
-                                        JacksonMapperFactory.create(
-                                                m -> m.setAnnotationIntrospector(JacksonMapperFactory.ignoreHiddenFieldsIntrospector())))));
+                                (cls, charset) -> this.createMapper())));
+    }
+
+    private ObjectMapper createMapper() {
+        return JacksonMapperFactory.create(m ->
+                m.setAnnotationIntrospector(JacksonMapperFactory.ignoreHiddenFieldsIntrospector()));
     }
 }

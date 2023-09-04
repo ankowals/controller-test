@@ -1,17 +1,15 @@
 package com.github.ankowals.example.rest.client.requests;
 
 import com.github.ankowals.example.rest.framework.client.JacksonMapperFactory;
-import com.github.ankowals.example.rest.framework.client.requests.ConsumerAcceptingExecutableRequest;
 import com.github.ankowals.example.rest.dto.PersonDto;
+import com.github.ankowals.example.rest.framework.client.request.ResponseSpecificationAcceptingExecutableRequest;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.internal.mapping.Jackson2Mapper;
 import io.restassured.response.Response;
-import io.restassured.response.ValidatableResponse;
+import io.restassured.specification.ResponseSpecification;
 
-import java.util.function.Consumer;
-
-public class GetPersonsRequest implements ConsumerAcceptingExecutableRequest<PersonDto[]> {
+public class GetPersonsRequest implements ResponseSpecificationAcceptingExecutableRequest<PersonDto[]> {
 
     private final RequestSpecBuilder requestSpecBuilder;
 
@@ -29,11 +27,11 @@ public class GetPersonsRequest implements ConsumerAcceptingExecutableRequest<Per
     }
 
     @Override
-    public PersonDto[] execute(Consumer<ValidatableResponse> expression) {
-        Response response = this.execute();
-        expression.accept(response.then());
-
-        return response.as(PersonDto[].class,
-                new Jackson2Mapper(((type, charset) -> JacksonMapperFactory.create())));
+    public PersonDto[] execute(ResponseSpecification responseSpecification) {
+        return this.execute()
+                .then()
+                .spec(responseSpecification)
+                .extract()
+                .as(PersonDto[].class, new Jackson2Mapper(((type, charset) -> JacksonMapperFactory.create())));
     }
 }

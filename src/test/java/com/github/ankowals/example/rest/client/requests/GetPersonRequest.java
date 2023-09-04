@@ -1,16 +1,13 @@
 package com.github.ankowals.example.rest.client.requests;
 
-import com.github.ankowals.example.rest.framework.client.requests.ConsumerAcceptingExecutableRequest;
-import com.github.ankowals.example.rest.framework.client.requests.ResponseSpecificationAcceptingExecutableRequest;
+import com.github.ankowals.example.rest.framework.client.request.ResponseSpecificationAcceptingExecutableRequest;
 import com.github.ankowals.example.rest.dto.PersonDto;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.response.Response;
-import io.restassured.response.ValidatableResponse;
+import io.restassured.specification.ResponseSpecification;
 
-import java.util.function.Consumer;
-
-public class GetPersonRequest implements ConsumerAcceptingExecutableRequest<PersonDto>, ResponseSpecificationAcceptingExecutableRequest {
+public class GetPersonRequest implements ResponseSpecificationAcceptingExecutableRequest<PersonDto> {
 
     private final RequestSpecBuilder requestSpecBuilder;
 
@@ -29,10 +26,11 @@ public class GetPersonRequest implements ConsumerAcceptingExecutableRequest<Pers
     }
 
     @Override
-    public PersonDto execute(Consumer<ValidatableResponse> expression) {
-        Response response = this.execute();
-        expression.accept(response.then());
-
-        return response.as(PersonDto.class);
+    public PersonDto execute(ResponseSpecification responseSpecification) {
+        return this.execute()
+                .then()
+                .spec(responseSpecification)
+                .extract()
+                .as(PersonDto.class);
     }
 }
