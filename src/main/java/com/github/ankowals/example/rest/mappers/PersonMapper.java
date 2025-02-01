@@ -8,6 +8,7 @@ import org.mapstruct.Mapper;
 @Singleton
 @Mapper(componentModel = "jsr330")
 public interface PersonMapper {
-    Person toPerson(PersonDto personDto);
-    PersonDto toDto(Person person);
+  Person toPerson(PersonDto personDto);
+
+  PersonDto toDto(Person person);
 }

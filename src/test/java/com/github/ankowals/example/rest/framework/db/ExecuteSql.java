@@ -4,11 +4,11 @@ import java.util.Arrays;
 
 public class ExecuteSql {
 
-    public static ExecuteSqlScriptCommand script(String... paths) {
-        return new ExecuteSqlScriptCommand(Arrays.asList(paths));
-    }
+  public static ExecuteSqlScriptCommand script(String... paths) {
+    return new ExecuteSqlScriptCommand(Arrays.asList(paths));
+  }
 
-    public static ExecuteSqlStatementCommand statement(String statement) {
-        return new ExecuteSqlStatementCommand(statement);
-    }
+  public static ExecuteSqlStatementCommand statement(String statement) {
+    return new ExecuteSqlStatementCommand(statement);
+  }
 }

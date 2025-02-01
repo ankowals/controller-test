@@ -8,36 +8,37 @@ import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
 import io.micronaut.validation.Validated;
-
-import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
+import javax.validation.Valid;
 
 @Validated
 @Controller("/persons")
 public class PersonController {
 
-    private final PersonService personService;
+  private final PersonService personService;
 
-    public PersonController(PersonService personService) {
-        this.personService = personService;
-    }
+  public PersonController(PersonService personService) {
+    this.personService = personService;
+  }
 
-    @Post()
-    public HttpResponse<?> savePerson(@Body @Valid PersonDto personDto) {
-        this.personService.addPerson(personDto);
-        return HttpResponse.status(HttpStatus.CREATED)
-                .body(new Message(HttpStatus.CREATED.getCode(),"Saved successfully!"));
-    }
+  @Post()
+  public HttpResponse<Message> savePerson(@Body @Valid PersonDto personDto) {
+    this.personService.addPerson(personDto);
+    return HttpResponse.status(HttpStatus.CREATED)
+        .body(new Message(HttpStatus.CREATED.getCode(), "Saved successfully!"));
+  }
 
-    @Get(produces = MediaType.APPLICATION_JSON)
-    public HttpResponse<List<PersonDto>> getPersons() {
-        return HttpResponse.status(HttpStatus.OK).body(this.personService.getPersons());
-    }
+  @Get(produces = MediaType.APPLICATION_JSON)
+  public HttpResponse<List<PersonDto>> getPersons() {
+    return HttpResponse.status(HttpStatus.OK).body(this.personService.getPersons());
+  }
 
-    @Get(uri ="/{id}", produces = MediaType.APPLICATION_JSON)
-    public HttpResponse<?> getPerson(@PathVariable Long id) {
-        Optional<PersonDto> dto = this.personService.getPerson(id);
-        return dto.isPresent() ? HttpResponse.status(HttpStatus.OK).body(dto.get()) : HttpResponse.notFound();
-    }
+  @Get(uri = "/{id}", produces = MediaType.APPLICATION_JSON)
+  public HttpResponse<PersonDto> getPerson(@PathVariable Long id) {
+    Optional<PersonDto> dto = this.personService.getPerson(id);
+    return dto.isPresent()
+        ? HttpResponse.status(HttpStatus.OK).body(dto.get())
+        : HttpResponse.notFound();
+  }
 }

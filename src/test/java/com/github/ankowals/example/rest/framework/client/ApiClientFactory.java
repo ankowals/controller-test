@@ -12,31 +12,32 @@ import io.restassured.config.RestAssuredConfig;
 import io.restassured.filter.log.RequestLoggingFilter;
 import io.restassured.filter.log.ResponseLoggingFilter;
 import jakarta.inject.Singleton;
-
 import java.net.URI;
 
 @Factory
 public class ApiClientFactory {
 
-    @Bean
-    @Primary
-    @Singleton
-    public ApiClient client(EmbeddedServer embeddedServer) {
-        return new ApiClient(() -> this.createBaseRequestSpec(embeddedServer.getURI()));
-    }
+  @Bean
+  @Primary
+  @Singleton
+  public ApiClient client(EmbeddedServer embeddedServer) {
+    return new ApiClient(() -> this.createBaseRequestSpec(embeddedServer.getURI()));
+  }
 
-    private RequestSpecBuilder createBaseRequestSpec(URI baseUri) {
-        return new RequestSpecBuilder()
-                .setBaseUri(baseUri)
-                .addFilter(new RequestLoggingFilter())
-                .addFilter(new ResponseLoggingFilter())
-                .setConfig(RestAssuredConfig.config().objectMapperConfig(
-                        ObjectMapperConfig.objectMapperConfig().jackson2ObjectMapperFactory(
-                                (cls, charset) -> this.createMapper())));
-    }
+  private RequestSpecBuilder createBaseRequestSpec(URI baseUri) {
+    return new RequestSpecBuilder()
+        .setBaseUri(baseUri)
+        .addFilter(new RequestLoggingFilter())
+        .addFilter(new ResponseLoggingFilter())
+        .setConfig(
+            RestAssuredConfig.config()
+                .objectMapperConfig(
+                    ObjectMapperConfig.objectMapperConfig()
+                        .jackson2ObjectMapperFactory((cls, charset) -> this.createMapper())));
+  }
 
-    private ObjectMapper createMapper() {
-        return JacksonMapperFactory.create(m ->
-                m.setAnnotationIntrospector(JacksonMapperFactory.ignoreHiddenFieldsIntrospector()));
-    }
+  private ObjectMapper createMapper() {
+    return JacksonMapperFactory.create(
+        m -> m.setAnnotationIntrospector(JacksonMapperFactory.ignoreHiddenFieldsIntrospector()));
+  }
 }

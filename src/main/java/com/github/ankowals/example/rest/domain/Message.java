@@ -2,29 +2,29 @@ package com.github.ankowals.example.rest.domain;
 
 public class Message {
 
-    private int code;
-    private String message;
+  private int code;
+  private String content;
 
-    public Message(int code, String message) {
-        this.code = code;
-        this.message = message;
-    }
+  public Message(int code, String content) {
+    this.code = code;
+    this.content = content;
+  }
 
-    public Message() {}
+  public Message() {}
 
-    public void setCode(int code) {
-        this.code = code;
-    }
+  public void setCode(int code) {
+    this.code = code;
+  }
 
-    public int getCode() {
-        return this.code;
-    }
+  public int getCode() {
+    return this.code;
+  }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
+  public void setContent(String content) {
+    this.content = content;
+  }
 
-    public String getMessage() {
-        return this.message;
-    }
+  public String getContent() {
+    return this.content;
+  }
 }

@@ -6,39 +6,38 @@ import io.micronaut.core.annotation.Introspected;
 @Introspected
 public class PersonDto {
 
-    @JsonProperty("personName")
-    private String name;
+  @JsonProperty("personName")
+  private String name;
 
-    @JsonProperty("personId")
-    private Long id;
+  @JsonProperty("personId")
+  private Long id;
 
-    @JsonProperty("personAge")
-    private int age;
+  @JsonProperty("personAge")
+  private int age;
 
-    public PersonDto() {
-    }
+  public PersonDto() {}
 
-    public String getName() {
-        return this.name;
-    }
+  public String getName() {
+    return this.name;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public Long getId() {
-        return this.id;
-    }
+  public Long getId() {
+    return this.id;
+  }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-    public int getAge() {
-        return this.age;
-    }
+  public int getAge() {
+    return this.age;
+  }
 
-    public void setAge(int age) {
-        this.age = age;
-    }
+  public void setAge(int age) {
+    this.age = age;
+  }
 }

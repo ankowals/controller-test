@@ -6,5 +6,5 @@ import java.sql.SQLException;
 
 @FunctionalInterface
 public interface JdbcConnectionCommand {
-    void run(Connection connection) throws SQLException, IOException;
+  void run(Connection connection) throws SQLException, IOException;
 }
