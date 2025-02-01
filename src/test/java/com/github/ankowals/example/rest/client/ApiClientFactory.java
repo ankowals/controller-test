@@ -1,7 +1,7 @@
-package com.github.ankowals.example.rest.framework.client;
+package com.github.ankowals.example.rest.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.ankowals.example.rest.client.ApiClient;
+import com.github.ankowals.example.rest.framework.client.JacksonMapperFactory;
 import io.micronaut.context.annotation.Bean;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Primary;

@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 public class ResourceLoader {
 
   private static final ObjectMapper OBJECT_MAPPER = JacksonMapperFactory.create();
-  ;
 
   private final String path;
 

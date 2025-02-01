@@ -1,6 +1,5 @@
-package com.github.ankowals.example.rest.framework.client.response;
+package com.github.ankowals.example.rest.client.response;
 
-import com.github.ankowals.example.rest.framework.client.dto.ErrorDto;
 import io.micronaut.http.HttpStatus;
 import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.response.ValidatableResponse;

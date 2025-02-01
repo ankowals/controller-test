@@ -1,4 +1,4 @@
-package com.github.ankowals.example.rest.framework.environment;
+package com.github.ankowals.example.rest.environment;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

@@ -1,6 +1,5 @@
 package com.github.ankowals.example.rest.tests;
 
-import com.github.ankowals.example.rest.IntegrationTestBase;
 import com.github.ankowals.example.rest.data.PersonFactory;
 import com.github.ankowals.example.rest.domain.Person;
 import com.github.ankowals.example.rest.repositories.PersonRepository;

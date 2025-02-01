@@ -1,12 +1,11 @@
 package com.github.ankowals.example.rest.tests;
 
-import com.github.ankowals.example.rest.IntegrationTestBase;
 import com.github.ankowals.example.rest.client.ApiClient;
 import com.github.ankowals.example.rest.data.PersonFactory;
 import com.github.ankowals.example.rest.domain.Person;
 import com.github.ankowals.example.rest.dto.PersonDto;
-import com.github.ankowals.example.rest.framework.client.dto.ErrorDto;
-import com.github.ankowals.example.rest.framework.client.response.Expect;
+import com.github.ankowals.example.rest.client.response.ErrorDto;
+import com.github.ankowals.example.rest.client.response.Expect;
 import com.github.ankowals.example.rest.mappers.PersonMapper;
 import com.github.ankowals.example.rest.repositories.PersonRepository;
 import io.micronaut.http.HttpStatus;
