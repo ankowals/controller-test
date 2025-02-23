@@ -1,4 +1,4 @@
-package com.github.ankowals.example.rest.framework.client.request;
+package com.github.ankowals.example.rest.framework.request;
 
 import io.restassured.response.Response;
 

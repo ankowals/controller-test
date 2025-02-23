@@ -2,7 +2,7 @@ package com.github.ankowals.example.rest.client.requests;
 
 import com.github.ankowals.example.rest.dto.PersonDto;
 import com.github.ankowals.example.rest.framework.JsonMapperFactory;
-import com.github.ankowals.example.rest.framework.client.request.ResponseSpecificationAcceptingExecutableRequest;
+import com.github.ankowals.example.rest.framework.request.ResponseSpecificationAcceptingExecutableRequest;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.internal.mapping.Jackson2Mapper;
