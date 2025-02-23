@@ -13,22 +13,29 @@ import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.Test;
 
 @MicronautTest(startApplication = false, transactional = false, rollback = false)
-public class PersonRepositoryTest extends IntegrationTestBase {
+class PersonRepositoryTest extends IntegrationTestBase {
 
   @Inject PersonRepository personRepository;
 
   @Inject PersonFactory define;
 
   @Test
-  void shouldInsertPerson() throws IOException {
-    List<Person> persons = this.define.persons("persons.json");
-    persons.stream().parallel().forEach(person -> this.personRepository.save(person));
+  void shouldInsertPersons() throws IOException {
+    List<Person> personsFormJson = this.define.personsFromJson("persons.json");
+    personsFormJson.stream().parallel().forEach(person -> this.personRepository.save(person));
+
+    List<Person> personsFromCsv = this.define.personsFromCsv("persons.csv");
+    personsFromCsv.stream().parallel().forEach(person -> this.personRepository.save(person));
 
     List<Person> actual = this.personRepository.findAll();
 
     Assertions.assertThat(actual)
         .extracting(Person::getName)
-        .containsAll(persons.stream().map(Person::getName).toList());
+        .containsAll(personsFormJson.stream().map(Person::getName).toList());
+
+    Assertions.assertThat(actual)
+        .extracting(Person::getName)
+        .containsAll(personsFromCsv.stream().map(Person::getName).toList());
   }
 
   @Test

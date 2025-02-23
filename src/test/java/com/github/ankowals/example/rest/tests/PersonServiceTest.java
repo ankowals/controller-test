@@ -1,11 +1,11 @@
 package com.github.ankowals.example.rest.tests;
 
 import com.github.ankowals.example.rest.client.ApiClient;
+import com.github.ankowals.example.rest.client.response.ErrorDto;
+import com.github.ankowals.example.rest.client.response.Expect;
 import com.github.ankowals.example.rest.data.PersonFactory;
 import com.github.ankowals.example.rest.domain.Person;
 import com.github.ankowals.example.rest.dto.PersonDto;
-import com.github.ankowals.example.rest.client.response.ErrorDto;
-import com.github.ankowals.example.rest.client.response.Expect;
 import com.github.ankowals.example.rest.mappers.PersonMapper;
 import com.github.ankowals.example.rest.repositories.PersonRepository;
 import io.micronaut.http.HttpStatus;
@@ -20,7 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.testcontainers.shaded.org.awaitility.Awaitility;
 
 @MicronautTest(transactional = false, rollback = false)
-public class PersonServiceTest extends IntegrationTestBase {
+class PersonServiceTest extends IntegrationTestBase {
 
   @Inject PersonRepository personRepository;
 
@@ -57,7 +57,7 @@ public class PersonServiceTest extends IntegrationTestBase {
   }
 
   @Test
-  void shouldGetPersonAsynch() {
+  void shouldGetPerson() {
     Person expected = this.define.person();
     this.personRepository.save(expected);
 
@@ -94,7 +94,7 @@ public class PersonServiceTest extends IntegrationTestBase {
 
     Assertions.assertThat(actual)
         .extracting(ErrorDto::getMessage)
-        .contains("entity.name: can not be empty", "entity.name: size must be between 1 and 20");
+        .contains("name: can not be empty");
   }
 
   @Test
@@ -107,6 +107,6 @@ public class PersonServiceTest extends IntegrationTestBase {
 
     Assertions.assertThat(actual)
         .extracting(ErrorDto::getMessage)
-        .contains("entity.age: must be greater than or equal to 1");
+        .contains("age: must be greater than or equal to 1");
   }
 }

@@ -29,7 +29,7 @@ public class PersonFactory {
   }
 
   public Person person(Consumer<Person> customizer) {
-    Person person = person();
+    Person person = this.person();
     customizer.accept(person);
 
     return person;
@@ -40,7 +40,7 @@ public class PersonFactory {
     return this.randomizationStrategy.randomize(person);
   }
 
-  public List<Person> persons(String path) throws IOException {
+  public List<Person> personsFromJson(String path) throws IOException {
     List<Person> persons = List.of(ResourceLoader.load(path).as(Person[].class));
     persons.forEach(this.randomizationStrategy::randomize);
 

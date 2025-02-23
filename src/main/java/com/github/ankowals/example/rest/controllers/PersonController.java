@@ -8,9 +8,9 @@ import io.micronaut.http.HttpStatus;
 import io.micronaut.http.MediaType;
 import io.micronaut.http.annotation.*;
 import io.micronaut.validation.Validated;
+import jakarta.validation.Valid;
 import java.util.List;
 import java.util.Optional;
-import javax.validation.Valid;
 
 @Validated
 @Controller("/persons")
