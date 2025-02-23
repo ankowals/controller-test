@@ -1,6 +1,6 @@
 package com.github.ankowals.example.rest.tests;
 
-import com.github.ankowals.example.rest.data.PersonFactory;
+import com.github.ankowals.example.rest.data.Persons;
 import com.github.ankowals.example.rest.domain.Person;
 import com.github.ankowals.example.rest.repositories.PersonRepository;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
@@ -17,14 +17,15 @@ class PersonRepositoryTest extends IntegrationTestBase {
 
   @Inject PersonRepository personRepository;
 
-  @Inject PersonFactory define;
+  @Inject
+  Persons persons;
 
   @Test
   void shouldInsertPersons() throws IOException {
-    List<Person> personsFormJson = this.define.personsFromJson("persons.json");
+    List<Person> personsFormJson = this.persons.manyFromJson("persons.json");
     personsFormJson.stream().parallel().forEach(person -> this.personRepository.save(person));
 
-    List<Person> personsFromCsv = this.define.personsFromCsv("persons.csv");
+    List<Person> personsFromCsv = this.persons.fromCsv("persons.csv");
     personsFromCsv.stream().parallel().forEach(person -> this.personRepository.save(person));
 
     List<Person> actual = this.personRepository.findAll();
@@ -41,9 +42,9 @@ class PersonRepositoryTest extends IntegrationTestBase {
   @Test
   void shouldReturnAdultPerson() {
     Stream.of(
-            this.define.person(p -> p.setAge(7)),
-            this.define.person(p -> p.setAge(17)),
-            this.define.person(p -> p.setAge(77)))
+            this.persons.randomOne(p -> p.setAge(7)),
+            this.persons.randomOne(p -> p.setAge(17)),
+            this.persons.randomOne(p -> p.setAge(77)))
         .parallel()
         .forEach(person -> this.personRepository.save(person));
 
@@ -57,9 +58,9 @@ class PersonRepositoryTest extends IntegrationTestBase {
   @Test
   void shouldReturnZenek() {
     Stream.of(
-            this.define.person(p -> p.setName("Waldek")),
-            this.define.person(p -> p.setName("Zenek")),
-            this.define.person(p -> p.setName("Ferdek")))
+            this.persons.randomOne(p -> p.setName("Waldek")),
+            this.persons.randomOne(p -> p.setName("Zenek")),
+            this.persons.randomOne(p -> p.setName("Ferdek")))
         .parallel()
         .forEach(person -> this.personRepository.save(person));
 

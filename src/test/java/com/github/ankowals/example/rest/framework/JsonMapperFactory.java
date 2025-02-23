@@ -1,33 +1,35 @@
-package com.github.ankowals.example.rest.framework.client;
+package com.github.ankowals.example.rest.framework;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.swagger.v3.oas.annotations.Hidden;
 import java.util.function.Consumer;
 
-public class JacksonMapperFactory {
+public class JsonMapperFactory {
 
-  public static ObjectMapper create(Consumer<ObjectMapper> customizer) {
-    ObjectMapper objectMapper = create();
-    customizer.accept(objectMapper);
+  public static JsonMapper create(Consumer<JsonMapper> customizer) {
+    JsonMapper jsonMapper = create();
+    customizer.accept(jsonMapper);
 
-    return objectMapper;
+    return jsonMapper;
   }
 
-  public static ObjectMapper create() {
-    ObjectMapper om = new ObjectMapper().findAndRegisterModules();
+  public static JsonMapper create() {
+    JsonMapper jsonMapper = new JsonMapper();
 
-    om.registerModule(new JavaTimeModule());
-    om.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-    om.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    om.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+    jsonMapper.findAndRegisterModules();
 
-    return om;
+    jsonMapper.registerModule(new JavaTimeModule());
+    jsonMapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+    jsonMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    jsonMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+    return jsonMapper;
   }
 
   public static JacksonAnnotationIntrospector ignoreHiddenFieldsIntrospector() {

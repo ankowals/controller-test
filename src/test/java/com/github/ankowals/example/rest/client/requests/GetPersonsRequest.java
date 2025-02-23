@@ -1,7 +1,7 @@
 package com.github.ankowals.example.rest.client.requests;
 
 import com.github.ankowals.example.rest.dto.PersonDto;
-import com.github.ankowals.example.rest.framework.client.JacksonMapperFactory;
+import com.github.ankowals.example.rest.framework.JsonMapperFactory;
 import com.github.ankowals.example.rest.framework.client.request.ResponseSpecificationAcceptingExecutableRequest;
 import io.restassured.RestAssured;
 import io.restassured.builder.RequestSpecBuilder;
@@ -32,6 +32,6 @@ public class GetPersonsRequest
         .extract()
         .as(
             PersonDto[].class,
-            new Jackson2Mapper(((type, charset) -> JacksonMapperFactory.create())));
+            new Jackson2Mapper(((type, charset) -> JsonMapperFactory.create())));
   }
 }

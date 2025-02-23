@@ -13,10 +13,12 @@ import java.util.regex.Pattern;
 public class ExecuteSqlScriptCommand implements JdbcConnectionCommand {
 
   private final List<String> paths;
+  private final ResourceLoader resourceLoader;
   private String separator = ";";
 
   ExecuteSqlScriptCommand(List<String> paths) {
     this.paths = paths;
+    this.resourceLoader = new ResourceLoader();
   }
 
   public ExecuteSqlScriptCommand usingSeparator(String separator) {
@@ -29,14 +31,16 @@ public class ExecuteSqlScriptCommand implements JdbcConnectionCommand {
     try (Statement statement = connection.createStatement()) {
 
       for (String path : this.paths) {
-        String content = this.clean(ResourceLoader.load(path).asString());
+        String content = this.clean(this.resourceLoader.asString(path));
 
         for (String executable : this.split(content)) {
           statement.execute(executable);
         }
       }
 
-      if (!connection.getAutoCommit()) connection.commit();
+      if (!connection.getAutoCommit()) {
+        connection.commit();
+      }
     }
   }
 

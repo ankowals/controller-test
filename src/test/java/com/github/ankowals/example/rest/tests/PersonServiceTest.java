@@ -3,7 +3,7 @@ package com.github.ankowals.example.rest.tests;
 import com.github.ankowals.example.rest.client.ApiClient;
 import com.github.ankowals.example.rest.client.response.ErrorDto;
 import com.github.ankowals.example.rest.client.response.Expect;
-import com.github.ankowals.example.rest.data.PersonFactory;
+import com.github.ankowals.example.rest.data.Persons;
 import com.github.ankowals.example.rest.domain.Person;
 import com.github.ankowals.example.rest.dto.PersonDto;
 import com.github.ankowals.example.rest.mappers.PersonMapper;
@@ -28,11 +28,12 @@ class PersonServiceTest extends IntegrationTestBase {
 
   @Inject ApiClient api;
 
-  @Inject PersonFactory define;
+  @Inject
+  Persons persons;
 
   @Test
   void shouldSavePerson() throws IOException {
-    Person person = this.define.person("person.json");
+    Person person = this.persons.fromJson("person.json");
     PersonDto personDto = this.personMapper.toDto(person);
 
     this.api.savePerson(personDto).execute();
@@ -44,21 +45,21 @@ class PersonServiceTest extends IntegrationTestBase {
 
   @Test
   void shouldGetPersons() {
-    List<Person> persons =
-        List.of(this.define.person(), this.define.person(), this.define.person());
+    List<Person> personList =
+        List.of(this.persons.randomOne(), this.persons.randomOne(), this.persons.randomOne());
 
-    persons.forEach(person -> this.personRepository.save(person));
+    personList.forEach(person -> this.personRepository.save(person));
 
     PersonDto[] actual = this.api.getPersons().execute(Expect.status(HttpStatus.OK));
 
     Assertions.assertThat(actual)
         .extracting(PersonDto::getName)
-        .containsAll(persons.stream().map(Person::getName).toList());
+        .containsAll(personList.stream().map(Person::getName).toList());
   }
 
   @Test
   void shouldGetPerson() {
-    Person expected = this.define.person();
+    Person expected = this.persons.randomOne();
     this.personRepository.save(expected);
 
     Long id =
@@ -86,7 +87,7 @@ class PersonServiceTest extends IntegrationTestBase {
 
   @Test
   void shouldNotAcceptPersonWithEmptyName() {
-    Person person = this.define.person(p -> p.setName(""));
+    Person person = this.persons.randomOne(p -> p.setName(""));
     PersonDto personDto = this.personMapper.toDto(person);
 
     List<ErrorDto> actual =
@@ -99,7 +100,7 @@ class PersonServiceTest extends IntegrationTestBase {
 
   @Test
   void shouldNotAcceptPersonWithNegativeAge() {
-    Person person = this.define.person(p -> p.setAge(-1));
+    Person person = this.persons.randomOne(p -> p.setAge(-1));
     PersonDto personDto = this.personMapper.toDto(person);
 
     List<ErrorDto> actual =

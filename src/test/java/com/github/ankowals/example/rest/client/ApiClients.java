@@ -1,7 +1,6 @@
 package com.github.ankowals.example.rest.client;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.ankowals.example.rest.framework.client.JacksonMapperFactory;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import io.micronaut.context.annotation.Bean;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Primary;
@@ -15,16 +14,16 @@ import jakarta.inject.Singleton;
 import java.net.URI;
 
 @Factory
-public class ApiClientFactory {
+public class ApiClients {
 
   @Bean
   @Primary
   @Singleton
-  public ApiClient client(EmbeddedServer embeddedServer) {
-    return new ApiClient(() -> this.createBaseRequestSpec(embeddedServer.getURI()));
+  public ApiClient client(EmbeddedServer embeddedServer, JsonMapper jsonMapper) {
+    return new ApiClient(() -> this.createBaseRequestSpec(embeddedServer.getURI(), jsonMapper));
   }
 
-  private RequestSpecBuilder createBaseRequestSpec(URI baseUri) {
+  private RequestSpecBuilder createBaseRequestSpec(URI baseUri, JsonMapper jsonMapper) {
     return new RequestSpecBuilder()
         .setBaseUri(baseUri)
         .addFilter(new RequestLoggingFilter())
@@ -33,11 +32,6 @@ public class ApiClientFactory {
             RestAssuredConfig.config()
                 .objectMapperConfig(
                     ObjectMapperConfig.objectMapperConfig()
-                        .jackson2ObjectMapperFactory((cls, charset) -> this.createMapper())));
-  }
-
-  private ObjectMapper createMapper() {
-    return JacksonMapperFactory.create(
-        m -> m.setAnnotationIntrospector(JacksonMapperFactory.ignoreHiddenFieldsIntrospector()));
+                        .jackson2ObjectMapperFactory((cls, charset) -> jsonMapper)));
   }
 }

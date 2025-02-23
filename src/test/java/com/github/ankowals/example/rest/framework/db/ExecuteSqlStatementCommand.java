@@ -19,6 +19,8 @@ public class ExecuteSqlStatementCommand implements JdbcConnectionCommand {
       ps.executeUpdate();
     }
 
-    if (!connection.getAutoCommit()) connection.commit();
+    if (!connection.getAutoCommit()) {
+      connection.commit();
+    }
   }
 }
