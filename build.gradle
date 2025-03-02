@@ -5,7 +5,7 @@ plugins {
     id 'io.micronaut.aot' version "4.4.4"
 }
 
-group 'com.github.ankowals.example.rest'
+group 'com.github.ankowals.example'
 version '1.0-SNAPSHOT'
 
 repositories {
@@ -17,6 +17,8 @@ dependencies {
     annotationProcessor("io.micronaut:micronaut-http-validation")
     annotationProcessor("io.micronaut.openapi:micronaut-openapi")
     annotationProcessor("io.micronaut.validation:micronaut-validation-processor")
+    annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
+
     implementation("io.micronaut:micronaut-jackson-databind")
     implementation("io.micronaut.flyway:micronaut-flyway")
     implementation("io.micronaut.sql:micronaut-hibernate-jpa")
@@ -24,29 +26,27 @@ dependencies {
     implementation("io.micronaut.sql:micronaut-jdbc-hikari")
     implementation("io.micronaut.validation:micronaut-validation")
     implementation("jakarta.validation:jakarta.validation-api")
-    compileOnly("io.micronaut:micronaut-http-client")
-    compileOnly("io.micronaut.openapi:micronaut-openapi-annotations")
+    implementation("io.micronaut:micronaut-http-client")
+    implementation("io.micronaut.openapi:micronaut-openapi-annotations")
+    implementation("io.swagger.core.v3:swagger-annotations:2.2.28")
+    implementation("org.mapstruct:mapstruct:1.6.3")
+
     runtimeOnly("ch.qos.logback:logback-classic")
     runtimeOnly("org.flywaydb:flyway-database-postgresql")
     runtimeOnly("org.postgresql:postgresql")
     runtimeOnly("org.yaml:snakeyaml")
-    testImplementation("io.micronaut:micronaut-http-client")
-    testImplementation("org.assertj:assertj-core:3.27.3")
-    testImplementation("org.awaitility:awaitility:4.3.0")
+
     testImplementation("org.testcontainers:postgresql")
     testImplementation("org.testcontainers:testcontainers")
-
-    implementation("io.swagger.core.v3:swagger-annotations:2.2.28")
-    implementation("org.mapstruct:mapstruct:1.6.3")
-    annotationProcessor("org.mapstruct:mapstruct-processor:1.6.3")
-
+    testImplementation("org.assertj:assertj-core:3.27.3")
+    testImplementation("org.awaitility:awaitility:4.3.0")
     testImplementation("org.junit.platform:junit-platform-launcher:1.12.0")
     testImplementation("io.rest-assured:rest-assured:5.5.1")
     testImplementation("com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.18.2")
 }
 
 application {
-    mainClass = "com.github.ankowals.example.rest"
+    mainClass = "com.github.ankowals.example.rest.Application"
 }
 
 java {
@@ -56,13 +56,12 @@ java {
 
 graalvmNative.toolchainDetection = false
 
-
 micronaut {
     runtime("netty")
     testRuntime("junit5")
     processing {
         incremental(true)
-        annotations("com.github.ankowals.example.rest.*")
+        annotations("com.github.ankowals.example.*")
     }
 
     aot {
